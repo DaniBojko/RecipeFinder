@@ -4,32 +4,31 @@ import { useState } from "react";
 import IngredientSearcher from "./components/IngredientSearcher";
 import { useWindowSize } from "./hooks/useWindowSize";
 
+export interface Ingredient {
+  name: string;
+  id: number;
+}
+
+const tmp = [
+  { name: "vaj", id: 1 },
+  { name: "sajt", id: 2 },
+];
+
 function App() {
-  const [ingredients, updateIngredients] = useState(["vaj", "sajt"]);
+  const [ingredients, updateIngredients] = useState(tmp);
   const [ComponentState, updateComponentState] = useState(0);
   const [windowWidth, windowHeight] = useWindowSize();
 
-  const breakpoints = {
-    base: "0px",
-    sm: "320px",
-    md: "768px",
-    lg: "960px",
-    xl: "1200px",
-    "2xl": "1536px",
-  };
-  extendTheme({ breakpoints });
-
   const deleteIngredient = (deleteById: number) => {
-    console.log(deleteById);
     if (deleteById == -1) updateIngredients([]);
     else
       updateIngredients(
-        ingredients.filter((ingredient, index) => index != deleteById)
+        ingredients.filter((ingredient) => ingredient.id != deleteById)
       );
   };
 
   const addIngredient = (item: string) => {
-    if (item) updateIngredients([item, ...ingredients]);
+    if (item) updateIngredients([{ name: item, id: 5 }, ...ingredients]); // FIX WITH DATA
   };
 
   const returnIngredientSearcher = () => {
@@ -51,7 +50,7 @@ function App() {
   };
 
   const IngredientOrMain = () => {
-    if (ComponentState % 2 == 0 || windowWidth >= 768) return returnMain();
+    if (ComponentState % 2 == 0 || windowWidth >= 768) return returnMain(); //768 - tablet size
 
     return returnIngredientSearcher();
   };

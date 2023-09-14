@@ -9,8 +9,10 @@ import { MdAdd } from "react-icons/md";
 import ListItem from "./ListItem";
 import { FormEvent, useRef } from "react";
 
+import { Ingredient } from "../App";
+
 interface Props {
-  ingredients: string[];
+  ingredients: Ingredient[];
   deleteIngredient: (id: number) => void;
   addIngredient: (item: string) => void;
 }
@@ -64,10 +66,9 @@ const IngredientSearcher = ({
         </Button>
       )}
       <ul className="list-group list-group-flush">
-        {ingredients.map((ingredient, index) => (
+        {ingredients.map((ingredient) => (
           <ListItem
-            key={index}
-            id={index}
+            key={ingredient.id}
             item={ingredient}
             onDelete={(id) => deleteIngredient(id)}
           ></ListItem>
