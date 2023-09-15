@@ -2,7 +2,9 @@ import { Button, ChakraProvider, Hide, Show } from "@chakra-ui/react";
 import { Grid, GridItem, extendTheme } from "@chakra-ui/react";
 import { useState } from "react";
 import IngredientSearcher from "./components/IngredientSearcher";
+import LogInForm from "./components/LogInForm";
 import { useWindowSize } from "./hooks/useWindowSize";
+import RegisterForm from "./components/RegisterForm";
 
 export interface Ingredient {
   name: string;
@@ -57,7 +59,15 @@ function App() {
 
   return (
     <ChakraProvider>
-      <Grid
+      <RegisterForm />
+    </ChakraProvider>
+  );
+}
+
+export default App;
+
+/*
+    <Grid
         templateAreas={{ base: `"nav" "main"`, md: `"nav nav" "aside main"` }}
         gridTemplateRows={"auto 1fr"}
         gridTemplateColumns={{ base: "1fr", md: "30% 1fr", lg: "300px 1fr" }}
@@ -94,12 +104,6 @@ function App() {
           {IngredientOrMain()}
         </GridItem>
       </Grid>
-    </ChakraProvider>
-  );
-}
 
-export default App;
-
-/*
 
       */
