@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 
 import { marginBottom, inputVariant } from "../assets/StyleVariables";
@@ -19,6 +20,7 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm();
   const [showPW, setShowPW] = useState(false);
   const [showVPW, setShowVPW] = useState(false);
@@ -28,6 +30,27 @@ const RegisterForm = () => {
 
   const onSubmit = (data: FieldValues) => {
     console.log(data);
+  };
+
+  const validateEmail = (email: string) => {
+    if (email === "asd@asd") return false;
+    return true;
+  };
+
+  const validateUserName = (uname: string) => {
+    const regex = /^[a-zA-Z0-9_]+$/;
+
+    if (!regex.test(uname)) return [false, "Invalid Username"];
+    if (uname.length < 3) return [false, "Username is not long enough."];
+    if (uname.length >= 15) return [false, "Username is too long."];
+    if (uname === "ASDFG") return [false, "Username is taken."];
+    return [true, ""];
+  };
+
+  const validatePassword = (pw: string) => {
+    if (pw.length < 5) return false;
+
+    return true;
   };
 
   return (
@@ -47,39 +70,57 @@ const RegisterForm = () => {
             focusBorderColor={borderColor}
             marginBottom={marginBottom}
             variant={inputVariant}
-            {...register("email", { required: true })}
             id="email"
             type="email"
             placeholder="E-mail"
+            {...register("email", {
+              required: "Please enter your E-mail.",
+              validate: (value) => {
+                return validateEmail(value) || "This E-mail is already in use.";
+              },
+            })}
           />
-          {errors.email?.type === "required" && (
-            <p>Please enter your E-mail.</p>
-          )}
+
+          <ErrorMessage
+            errors={errors}
+            name="email"
+            render={({ message }) => <p>{message}</p>}
+          />
 
           <Input
             focusBorderColor={borderColor}
             marginBottom={marginBottom}
             variant={inputVariant}
-            {...register("username", { required: true, minLength: 3 })}
             id="username"
             type="text"
             placeholder="Username"
+            {...register("username", {
+              required: "Please enter your Username.",
+              validate: (value) => {
+                const [ret, msg] = validateUserName(value);
+                return ret || msg;
+              },
+            })}
           />
-          {errors.username?.type === "minLength" && (
-            <p>Your username is not long enough.</p>
-          )}
-          {errors.username?.type === "required" && (
-            <p>Please enter a username.</p>
-          )}
+
+          <ErrorMessage
+            errors={errors}
+            name="username"
+            render={({ message }) => <p>{message}</p>}
+          />
 
           <InputGroup marginBottom={marginBottom}>
             <Input
               focusBorderColor={borderColor}
               variant={inputVariant}
-              {...register("password", { required: true })}
               id="password"
               type={showPW ? "text" : "password"}
               placeholder="Password"
+              {...register("password", {
+                required: "Please enter your password.",
+                validate: (value) =>
+                  validatePassword(value) || "Password is weak",
+              })}
             />
             <InputRightElement>
               <IconButton
@@ -93,18 +134,25 @@ const RegisterForm = () => {
               />
             </InputRightElement>
           </InputGroup>
-          {errors.password?.type === "required" && (
-            <p>Please enter your password.</p>
-          )}
+
+          <ErrorMessage
+            errors={errors}
+            name="password"
+            render={({ message }) => <p>{message}</p>}
+          />
 
           <InputGroup marginBottom={marginBottom}>
             <Input
               focusBorderColor={borderColor}
               variant={inputVariant}
-              {...register("password2", { required: true })}
               id="password2"
               type={showVPW ? "text" : "password"}
-              placeholder="Verify password"
+              placeholder="Confirm password"
+              {...register("password2", {
+                required: "Please confirm your password.",
+                validate: (value) =>
+                  getValues("password") === value || "Passwords do not match.",
+              })}
             />
             <InputRightElement>
               <IconButton
@@ -113,14 +161,17 @@ const RegisterForm = () => {
                 border="0"
                 variant="outline"
                 colorScheme={colorScheme}
-                icon={showPW ? <LuEye /> : <LuEyeOff />}
+                icon={showVPW ? <LuEye /> : <LuEyeOff />}
                 onClick={() => setShowVPW(!showVPW)}
               />
             </InputRightElement>
           </InputGroup>
-          {errors.password2?.type === "required" && (
-            <p>Please confirm your password.</p>
-          )}
+
+          <ErrorMessage
+            errors={errors}
+            name="password2"
+            render={({ message }) => <p>{message}</p>}
+          />
 
           <Button
             marginY={marginBottom}
