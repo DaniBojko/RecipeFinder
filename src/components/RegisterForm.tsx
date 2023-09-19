@@ -1,6 +1,7 @@
 import {
   Button,
   Center,
+  ChakraProvider,
   Container,
   IconButton,
   Input,
@@ -60,142 +61,154 @@ const RegisterForm = () => {
   };
 
   return (
-    <Center h="100vh" padding="20px">
-      <Container
-        maxW="50ch"
-        paddingX="50px"
-        paddingY="20px"
-        borderRadius="15px"
-      >
-        <Center>
-          <Text>Create a new account</Text>
-        </Center>
+    <ChakraProvider>
+      <Center h="100vh" padding="20px">
+        <Container
+          maxW="50ch"
+          paddingX="50px"
+          paddingY="20px"
+          borderRadius="15px"
+        >
+          <Center>
+            <Text>Create a new account</Text>
+          </Center>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            focusBorderColor={borderColor}
-            marginBottom={marginBottom}
-            variant={inputVariant}
-            id="email"
-            type="email"
-            placeholder="E-mail"
-            {...register("email", {
-              required: "Please enter your E-mail.",
-              validate: (value) => {
-                return validateEmail(value) || "This E-mail is already in use.";
-              },
-            })}
-          />
-
-          <ErrorMessage
-            errors={errors}
-            name="email"
-            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
-          />
-
-          <Input
-            focusBorderColor={borderColor}
-            marginBottom={marginBottom}
-            variant={inputVariant}
-            id="username"
-            type="text"
-            placeholder="Username"
-            {...register("username", {
-              required: "Please enter your Username.",
-              validate: (value) => validateUserName(value),
-            })}
-          />
-
-          <ErrorMessage
-            errors={errors}
-            name="username"
-            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
-          />
-
-          <InputGroup marginBottom={marginBottom}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Input
               focusBorderColor={borderColor}
+              marginBottom={marginBottom}
               variant={inputVariant}
-              id="password"
-              type={showPW ? "text" : "password"}
-              placeholder="Password"
-              {...register("password", {
-                required: "Please enter your password.",
-                onChange: (e) =>
-                  setPwState({ ...pwState, first: e.target.value }),
+              id="email"
+              type="email"
+              placeholder="E-mail"
+              {...register("email", {
+                required: "Please enter your E-mail.",
+                validate: (value) => {
+                  return (
+                    validateEmail(value) || "This E-mail is already in use."
+                  );
+                },
               })}
             />
-            <InputRightElement>
-              <IconButton
-                aria-label={showPW ? "Hide password" : "Show password"}
-                h="0"
-                border="0"
-                variant="outline"
-                colorScheme={colorScheme}
-                icon={showPW ? <LuEye /> : <LuEyeOff />}
-                onClick={() => setShowPW(!showPW)}
-              />
-            </InputRightElement>
-          </InputGroup>
 
-          <ErrorMessage
-            errors={errors}
-            name="password"
-            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
-          />
+            <ErrorMessage
+              errors={errors}
+              name="email"
+              render={({ message }) => (
+                <WarningMessage>{message}</WarningMessage>
+              )}
+            />
 
-          {pwState.first.length > 0 && !validatePassword(pwState.first) && (
-            <WarningMessage>Password is too weak.</WarningMessage>
-          )}
-
-          <InputGroup marginBottom={marginBottom}>
             <Input
               focusBorderColor={borderColor}
+              marginBottom={marginBottom}
               variant={inputVariant}
-              id="password2"
-              type={showVPW ? "text" : "password"}
-              placeholder="Confirm password"
-              {...register("password2", {
-                required: "Please confirm your password.",
-                onChange: (e) =>
-                  setPwState({ ...pwState, second: e.target.value }),
+              id="username"
+              type="text"
+              placeholder="Username"
+              {...register("username", {
+                required: "Please enter your Username.",
+                validate: (value) => validateUserName(value),
               })}
             />
-            <InputRightElement>
-              <IconButton
-                aria-label={showVPW ? "Hide password" : "Show password"}
-                h="0"
-                border="0"
-                variant="outline"
-                colorScheme={colorScheme}
-                icon={showVPW ? <LuEye /> : <LuEyeOff />}
-                onClick={() => setShowVPW(!showVPW)}
+
+            <ErrorMessage
+              errors={errors}
+              name="username"
+              render={({ message }) => (
+                <WarningMessage>{message}</WarningMessage>
+              )}
+            />
+
+            <InputGroup marginBottom={marginBottom}>
+              <Input
+                focusBorderColor={borderColor}
+                variant={inputVariant}
+                id="password"
+                type={showPW ? "text" : "password"}
+                placeholder="Password"
+                {...register("password", {
+                  required: "Please enter your password.",
+                  onChange: (e) =>
+                    setPwState({ ...pwState, first: e.target.value }),
+                })}
               />
-            </InputRightElement>
-          </InputGroup>
+              <InputRightElement>
+                <IconButton
+                  aria-label={showPW ? "Hide password" : "Show password"}
+                  h="0"
+                  border="0"
+                  variant="outline"
+                  colorScheme={colorScheme}
+                  icon={showPW ? <LuEye /> : <LuEyeOff />}
+                  onClick={() => setShowPW(!showPW)}
+                />
+              </InputRightElement>
+            </InputGroup>
 
-          <ErrorMessage
-            errors={errors}
-            name="password2"
-            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
-          />
+            <ErrorMessage
+              errors={errors}
+              name="password"
+              render={({ message }) => (
+                <WarningMessage>{message}</WarningMessage>
+              )}
+            />
 
-          {pwState.first != pwState.second && pwState.second.length > 0 && (
-            <WarningMessage>Passwords do not match.</WarningMessage>
-          )}
+            {pwState.first.length > 0 && !validatePassword(pwState.first) && (
+              <WarningMessage>Password is too weak.</WarningMessage>
+            )}
 
-          <Button
-            marginY={marginBottom}
-            colorScheme={colorScheme}
-            w="100%"
-            type="submit"
-            variant="outline"
-          >
-            Register
-          </Button>
-        </form>
-      </Container>
-    </Center>
+            <InputGroup marginBottom={marginBottom}>
+              <Input
+                focusBorderColor={borderColor}
+                variant={inputVariant}
+                id="password2"
+                type={showVPW ? "text" : "password"}
+                placeholder="Confirm password"
+                {...register("password2", {
+                  required: "Please confirm your password.",
+                  onChange: (e) =>
+                    setPwState({ ...pwState, second: e.target.value }),
+                })}
+              />
+              <InputRightElement>
+                <IconButton
+                  aria-label={showVPW ? "Hide password" : "Show password"}
+                  h="0"
+                  border="0"
+                  variant="outline"
+                  colorScheme={colorScheme}
+                  icon={showVPW ? <LuEye /> : <LuEyeOff />}
+                  onClick={() => setShowVPW(!showVPW)}
+                />
+              </InputRightElement>
+            </InputGroup>
+
+            <ErrorMessage
+              errors={errors}
+              name="password2"
+              render={({ message }) => (
+                <WarningMessage>{message}</WarningMessage>
+              )}
+            />
+
+            {pwState.first != pwState.second && pwState.second.length > 0 && (
+              <WarningMessage>Passwords do not match.</WarningMessage>
+            )}
+
+            <Button
+              marginY={marginBottom}
+              colorScheme={colorScheme}
+              w="100%"
+              type="submit"
+              variant="outline"
+            >
+              Register
+            </Button>
+          </form>
+        </Container>
+      </Center>
+    </ChakraProvider>
   );
 };
 

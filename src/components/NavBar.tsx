@@ -1,5 +1,6 @@
 import { Hide, Button, Flex, Spacer, IconButton } from "@chakra-ui/react";
 import { CloseIcon, AddIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   state: {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const NavBar = ({ state }: Props) => {
+  const navigate = useNavigate();
   return (
     <Flex>
       <Hide above="md">
@@ -21,7 +23,11 @@ const NavBar = ({ state }: Props) => {
         ></IconButton>
       </Hide>
       <Spacer />
-      <Button colorScheme="teal" variant="solid" onClick={() => alert("login")}>
+      <Button
+        colorScheme="teal"
+        variant="solid"
+        onClick={() => navigate("/login")}
+      >
         Log in
       </Button>
     </Flex>
