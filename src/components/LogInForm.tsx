@@ -11,7 +11,8 @@ import {
 import { useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-
+import { ErrorMessage } from "@hookform/error-message";
+import WarningMessage from "./WarningMessage";
 import { marginBottom, inputVariant } from "../assets/StyleVariables";
 
 const LogInForm = () => {
@@ -46,20 +47,25 @@ const LogInForm = () => {
             focusBorderColor={borderColor}
             marginBottom={marginBottom}
             variant={inputVariant}
-            {...register("email", { required: true })}
+            {...register("email", { required: "Please enter your E-mail." })}
             id="email"
             type="email"
             placeholder="E-mail"
           />
-          {errors.email?.type === "required" && (
-            <p>Please enter your E-mail.</p>
-          )}
+
+          <ErrorMessage
+            errors={errors}
+            name="email"
+            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
+          />
 
           <InputGroup marginBottom={marginBottom}>
             <Input
               focusBorderColor={borderColor}
               variant={inputVariant}
-              {...register("password", { required: true })}
+              {...register("password", {
+                required: "Please enter your Password.",
+              })}
               id="password"
               type={show ? "text" : "password"}
               placeholder="Password"
@@ -76,9 +82,12 @@ const LogInForm = () => {
               />
             </InputRightElement>
           </InputGroup>
-          {errors.password?.type === "required" && (
-            <p>Please enter your Password.</p>
-          )}
+
+          <ErrorMessage
+            errors={errors}
+            name="password"
+            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
+          />
 
           <Button
             marginY={marginBottom}
@@ -91,7 +100,7 @@ const LogInForm = () => {
           </Button>
           <Center>
             <Button
-              onClick={() => console.log("password recovery initiated")}
+              onClick={() => console.log("It sucks!")}
               colorScheme={colorScheme}
               variant="link"
             >

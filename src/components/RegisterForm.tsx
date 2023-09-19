@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-
+import WarningMessage from "./WarningMessage";
 import { marginBottom, inputVariant } from "../assets/StyleVariables";
 
 const RegisterForm = () => {
@@ -22,8 +22,10 @@ const RegisterForm = () => {
     formState: { errors },
     getValues,
   } = useForm();
+
   const [showPW, setShowPW] = useState(false);
   const [showVPW, setShowVPW] = useState(false);
+  const [pwState, setPwState] = useState({ first: "", second: "" });
 
   const colorScheme = "pink";
   const borderColor = "#b83280";
@@ -33,18 +35,23 @@ const RegisterForm = () => {
   };
 
   const validateEmail = (email: string) => {
+    // FIX W DB
     if (email === "asd@asd") return false;
+
     return true;
   };
 
   const validateUserName = (uname: string) => {
+    // FIX W DB
     const regex = /^[a-zA-Z0-9_]+$/;
+    const len = uname.length;
 
-    if (!regex.test(uname)) return [false, "Invalid Username"];
-    if (uname.length < 3) return [false, "Username is not long enough."];
-    if (uname.length >= 15) return [false, "Username is too long."];
-    if (uname === "ASDFG") return [false, "Username is taken."];
-    return [true, ""];
+    if (!regex.test(uname)) return "Invalid Username";
+    if (len < 3) return "Username is not long enough.";
+    if (len >= 15) return "Username is too long.";
+    if (uname === "ASDFG") return "Username is taken.";
+
+    return true;
   };
 
   const validatePassword = (pw: string) => {
@@ -84,7 +91,7 @@ const RegisterForm = () => {
           <ErrorMessage
             errors={errors}
             name="email"
-            render={({ message }) => <p>{message}</p>}
+            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
           />
 
           <Input
@@ -96,17 +103,14 @@ const RegisterForm = () => {
             placeholder="Username"
             {...register("username", {
               required: "Please enter your Username.",
-              validate: (value) => {
-                const [ret, msg] = validateUserName(value);
-                return ret || msg;
-              },
+              validate: (value) => validateUserName(value),
             })}
           />
 
           <ErrorMessage
             errors={errors}
             name="username"
-            render={({ message }) => <p>{message}</p>}
+            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
           />
 
           <InputGroup marginBottom={marginBottom}>
@@ -118,8 +122,8 @@ const RegisterForm = () => {
               placeholder="Password"
               {...register("password", {
                 required: "Please enter your password.",
-                validate: (value) =>
-                  validatePassword(value) || "Password is weak",
+                onChange: (e) =>
+                  setPwState({ ...pwState, first: e.target.value }),
               })}
             />
             <InputRightElement>
@@ -138,8 +142,12 @@ const RegisterForm = () => {
           <ErrorMessage
             errors={errors}
             name="password"
-            render={({ message }) => <p>{message}</p>}
+            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
           />
+
+          {pwState.first.length > 0 && !validatePassword(pwState.first) && (
+            <WarningMessage>Password is too weak.</WarningMessage>
+          )}
 
           <InputGroup marginBottom={marginBottom}>
             <Input
@@ -150,8 +158,8 @@ const RegisterForm = () => {
               placeholder="Confirm password"
               {...register("password2", {
                 required: "Please confirm your password.",
-                validate: (value) =>
-                  getValues("password") === value || "Passwords do not match.",
+                onChange: (e) =>
+                  setPwState({ ...pwState, second: e.target.value }),
               })}
             />
             <InputRightElement>
@@ -170,8 +178,12 @@ const RegisterForm = () => {
           <ErrorMessage
             errors={errors}
             name="password2"
-            render={({ message }) => <p>{message}</p>}
+            render={({ message }) => <WarningMessage>{message}</WarningMessage>}
           />
+
+          {pwState.first != pwState.second && pwState.second.length > 0 && (
+            <WarningMessage>Passwords do not match.</WarningMessage>
+          )}
 
           <Button
             marginY={marginBottom}
