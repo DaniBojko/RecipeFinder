@@ -40,7 +40,7 @@ const IngredientSearcher = ({
           <Input
             ref={itemRef}
             variant="filled"
-            placeholder="Hozzavalok keresese..."
+            placeholder="Search ingrediens..."
           />
           <InputRightElement>
             <IconButton
@@ -62,7 +62,7 @@ const IngredientSearcher = ({
           variant="solid"
           onClick={() => deleteIngredient(-1)}
         >
-          Összes törlése
+          Delete all
         </Button>
       )}
       <ul className="list-group list-group-flush">

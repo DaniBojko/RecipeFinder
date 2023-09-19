@@ -5,6 +5,7 @@ import IngredientSearcher from "./components/IngredientSearcher";
 import LogInForm from "./components/LogInForm";
 import { useWindowSize } from "./hooks/useWindowSize";
 import RegisterForm from "./components/RegisterForm";
+import NavBar from "./components/NavBar";
 
 export interface Ingredient {
   name: string;
@@ -18,7 +19,7 @@ const tmp = [
 
 function App() {
   const [ingredients, updateIngredients] = useState(tmp);
-  const [ComponentState, updateComponentState] = useState(0);
+  const [componentState, updateComponentState] = useState(0);
   const [windowWidth, windowHeight] = useWindowSize();
 
   const deleteIngredient = (deleteById: number) => {
@@ -52,40 +53,23 @@ function App() {
   };
 
   const IngredientOrMain = () => {
-    if (ComponentState % 2 == 0 || windowWidth >= 768) return returnMain(); //768 - tablet size
+    if (componentState % 2 == 0 || windowWidth >= 768) return returnMain(); //768 - tablet size
 
     return returnIngredientSearcher();
   };
 
-  return (
-    <ChakraProvider>
-      <RegisterForm />
-    </ChakraProvider>
-  );
-}
-
-export default App;
-
-/*
-    <Grid
+  const mainGrid = () => {
+    return (
+      <Grid
         templateAreas={{ base: `"nav" "main"`, md: `"nav nav" "aside main"` }}
         gridTemplateRows={"auto 1fr"}
         gridTemplateColumns={{ base: "1fr", md: "30% 1fr", lg: "300px 1fr" }}
-        gap="1"
         color="blackAlpha.700"
         fontWeight="bold"
         height="100vh"
       >
-        <GridItem pl="2" padding="0.5rem" bg="orange.300" area={"nav"}>
-          <Hide above="md">
-            <Button
-              colorScheme="teal"
-              variant="solid"
-              onClick={() => updateComponentState(ComponentState + 1)}
-            >
-              Button
-            </Button>
-          </Hide>
+        <GridItem pl="2" padding="0.5rem" area={"nav"}>
+          <NavBar state={{ componentState, updateComponentState }}></NavBar>
         </GridItem>
 
         <Show above="md">
@@ -104,6 +88,16 @@ export default App;
           {IngredientOrMain()}
         </GridItem>
       </Grid>
+    );
+  };
+
+  return <ChakraProvider>{mainGrid()}</ChakraProvider>;
+}
+
+export default App;
+
+/*
+    
 
 
       */

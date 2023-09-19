@@ -20,7 +20,6 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
   } = useForm();
 
   const [showPW, setShowPW] = useState(false);

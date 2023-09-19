@@ -99,12 +99,14 @@ const LogInForm = () => {
             Log In
           </Button>
           <Center>
+            <Text margin="0">Not a member yet?</Text>
             <Button
+              marginLeft="7px"
               onClick={() => console.log("It sucks!")}
               colorScheme={colorScheme}
               variant="link"
             >
-              Forgot password?
+              Register
             </Button>
           </Center>
         </form>
