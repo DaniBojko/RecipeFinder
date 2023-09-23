@@ -3,18 +3,14 @@ import {
   Center,
   ChakraProvider,
   Container,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
-import { LuEye, LuEyeOff } from "react-icons/lu";
-import WarningMessage from "./WarningMessage";
-import { marginBottom, inputVariant } from "../assets/StyleVariables";
+import ErrorText from "./ErrorText";
+import { marginBottom } from "../assets/StyleVariables";
+import InputTextField from "./InputTextField";
+import InputPasswordField from "./InputPasswordField";
 
 const RegisterForm = () => {
   const {
@@ -28,7 +24,6 @@ const RegisterForm = () => {
   const [pwState, setPwState] = useState({ first: "", second: "" });
 
   const colorScheme = "pink";
-  const borderColor = "#b83280";
 
   const onSubmit = (data: FieldValues) => {
     console.log(data);
@@ -36,7 +31,9 @@ const RegisterForm = () => {
 
   const validateEmail = (email: string) => {
     // FIX W DB
-    if (email === "asd@asd") return false;
+    if (email === "asd@asd") return "This email is already in use";
+
+    if (email === "asd") return "Invalid e-mail.";
 
     return true;
   };
@@ -74,37 +71,21 @@ const RegisterForm = () => {
           </Center>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Input
-              focusBorderColor={borderColor}
-              marginBottom={marginBottom}
-              variant={inputVariant}
-              id="email"
-              type="email"
+            {/* ------------------------------   EMAIL FIELD   ------------------------------ */}
+
+            <InputTextField
+              err={errors}
               placeholder="E-mail"
               {...register("email", {
-                required: "Please enter your E-mail.",
-                validate: (value) => {
-                  return (
-                    validateEmail(value) || "This E-mail is already in use."
-                  );
-                },
+                required: "Please enter your email",
+                validate: (value) => validateEmail(value),
               })}
             />
 
-            <ErrorMessage
-              errors={errors}
-              name="email"
-              render={({ message }) => (
-                <WarningMessage>{message}</WarningMessage>
-              )}
-            />
+            {/* ------------------------------   USERNAME FIELD   ------------------------------ */}
 
-            <Input
-              focusBorderColor={borderColor}
-              marginBottom={marginBottom}
-              variant={inputVariant}
-              id="username"
-              type="text"
+            <InputTextField
+              err={errors}
               placeholder="Username"
               {...register("username", {
                 required: "Please enter your Username.",
@@ -112,89 +93,42 @@ const RegisterForm = () => {
               })}
             />
 
-            <ErrorMessage
-              errors={errors}
-              name="username"
-              render={({ message }) => (
-                <WarningMessage>{message}</WarningMessage>
-              )}
-            />
+            {/* ------------------------------   PASSWORD FIELD   ------------------------------ */}
 
-            <InputGroup marginBottom={marginBottom}>
-              <Input
-                focusBorderColor={borderColor}
-                variant={inputVariant}
-                id="password"
-                type={showPW ? "text" : "password"}
-                placeholder="Password"
-                {...register("password", {
-                  required: "Please enter your password.",
-                  onChange: (e) =>
-                    setPwState({ ...pwState, first: e.target.value }),
-                })}
-              />
-              <InputRightElement>
-                <IconButton
-                  aria-label={showPW ? "Hide password" : "Show password"}
-                  h="0"
-                  border="0"
-                  variant="outline"
-                  colorScheme={colorScheme}
-                  icon={showPW ? <LuEye /> : <LuEyeOff />}
-                  onClick={() => setShowPW(!showPW)}
-                />
-              </InputRightElement>
-            </InputGroup>
-
-            <ErrorMessage
-              errors={errors}
-              name="password"
-              render={({ message }) => (
-                <WarningMessage>{message}</WarningMessage>
-              )}
+            <InputPasswordField
+              err={errors}
+              placeholder="Password"
+              show={showPW}
+              setShow={() => setShowPW(!showPW)}
+              {...register("password", {
+                required: "Please enter your password.",
+                onChange: (e) =>
+                  setPwState({ ...pwState, first: e.target.value }),
+              })}
             />
 
             {pwState.first.length > 0 && !validatePassword(pwState.first) && (
-              <WarningMessage>Password is too weak.</WarningMessage>
+              <ErrorText>Password is too weak.</ErrorText>
             )}
 
-            <InputGroup marginBottom={marginBottom}>
-              <Input
-                focusBorderColor={borderColor}
-                variant={inputVariant}
-                id="password2"
-                type={showVPW ? "text" : "password"}
-                placeholder="Confirm password"
-                {...register("password2", {
-                  required: "Please confirm your password.",
-                  onChange: (e) =>
-                    setPwState({ ...pwState, second: e.target.value }),
-                })}
-              />
-              <InputRightElement>
-                <IconButton
-                  aria-label={showVPW ? "Hide password" : "Show password"}
-                  h="0"
-                  border="0"
-                  variant="outline"
-                  colorScheme={colorScheme}
-                  icon={showVPW ? <LuEye /> : <LuEyeOff />}
-                  onClick={() => setShowVPW(!showVPW)}
-                />
-              </InputRightElement>
-            </InputGroup>
+            {/* ------------------------------   CONFIRM PASSWORD   ------------------------------ */}
 
-            <ErrorMessage
-              errors={errors}
-              name="password2"
-              render={({ message }) => (
-                <WarningMessage>{message}</WarningMessage>
-              )}
+            <InputPasswordField
+              err={errors}
+              placeholder="Confirm Password"
+              show={showVPW}
+              setShow={() => setShowVPW(!showVPW)}
+              {...register("confirmPassword", {
+                required: "Please confirm your password.",
+                onChange: (e) =>
+                  setPwState({ ...pwState, second: e.target.value }),
+              })}
             />
 
             {pwState.first != pwState.second && pwState.second.length > 0 && (
-              <WarningMessage>Passwords do not match.</WarningMessage>
+              <ErrorText>Passwords do not match.</ErrorText>
             )}
+            {/* ------------------------------   SUBMIT BUTTON   ------------------------------ */}
 
             <Button
               marginY={marginBottom}

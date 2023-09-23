@@ -7,7 +7,7 @@ interface Props {
   children: string;
 }
 
-const WarningMessage = ({ children }: Props) => {
+const ErrorText = ({ children }: Props) => {
   const color = "#c2001d";
   return (
     <HStack>
@@ -22,4 +22,4 @@ const WarningMessage = ({ children }: Props) => {
   );
 };
 
-export default WarningMessage;
+export default ErrorText;

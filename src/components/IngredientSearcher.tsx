@@ -1,27 +1,17 @@
 import {
-  Button,
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
-import ListItem from "./ListItem";
 import { FormEvent, useRef } from "react";
 
-import { Ingredient } from "../App";
-
 interface Props {
-  ingredients: Ingredient[];
-  deleteIngredient: (id: number) => void;
   addIngredient: (item: string) => void;
 }
 
-const IngredientSearcher = ({
-  ingredients,
-  deleteIngredient,
-  addIngredient,
-}: Props) => {
+const IngredientSearcher = ({ addIngredient }: Props) => {
   const itemRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: FormEvent) => {
@@ -34,47 +24,25 @@ const IngredientSearcher = ({
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <InputGroup>
-          <Input
-            ref={itemRef}
-            variant="filled"
-            placeholder="Search ingrediens..."
+    <form onSubmit={handleSubmit}>
+      <InputGroup>
+        <Input
+          ref={itemRef}
+          variant="filled"
+          placeholder="Search ingrediens..."
+        />
+        <InputRightElement>
+          <IconButton
+            variant="ghost"
+            type="submit"
+            colorScheme="green"
+            aria-label="Delete ingredient"
+            icon={<MdAdd />}
+            _hover={{ bg: "#ceedda" }}
           />
-          <InputRightElement>
-            <IconButton
-              variant="ghost"
-              type="submit"
-              colorScheme="green"
-              aria-label="Delete ingredient"
-              icon={<MdAdd />}
-              _hover={{ bg: "#ceedda" }}
-            />
-          </InputRightElement>
-        </InputGroup>
-      </form>
-      {ingredients.length > 0 && (
-        <Button
-          marginTop="10px"
-          width="100%"
-          colorScheme="red"
-          variant="solid"
-          onClick={() => deleteIngredient(-1)}
-        >
-          Delete all
-        </Button>
-      )}
-      <ul className="list-group list-group-flush">
-        {ingredients.map((ingredient) => (
-          <ListItem
-            key={ingredient.id}
-            item={ingredient}
-            onDelete={(id) => deleteIngredient(id)}
-          ></ListItem>
-        ))}
-      </ul>
-    </>
+        </InputRightElement>
+      </InputGroup>
+    </form>
   );
 };
 

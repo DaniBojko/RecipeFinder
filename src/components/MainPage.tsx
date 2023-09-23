@@ -2,7 +2,7 @@ import { ChakraProvider, Show } from "@chakra-ui/react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { useState } from "react";
 import { useWindowSize } from "../hooks/useWindowSize";
-import IngredientSearcher from "./IngredientSearcher";
+import FilterByIngredients from "./FilterByIngredients";
 import NavBar from "./NavBar";
 
 export interface Ingredient {
@@ -21,7 +21,7 @@ function MainPage() {
   const [windowWidth, windowHeight] = useWindowSize();
 
   const deleteIngredient = (deleteById: number) => {
-    if (deleteById == -1) updateIngredients([]);
+    if (deleteById === -1) updateIngredients([]);
     else
       updateIngredients(
         ingredients.filter((ingredient) => ingredient.id != deleteById)
@@ -32,9 +32,9 @@ function MainPage() {
     if (item) updateIngredients([{ name: item, id: 5 }, ...ingredients]); // FIX WITH DATA
   };
 
-  const returnIngredientSearcher = () => {
+  const returnFilter = () => {
     return (
-      <IngredientSearcher
+      <FilterByIngredients
         ingredients={ingredients}
         deleteIngredient={deleteIngredient}
         addIngredient={addIngredient}
@@ -53,7 +53,7 @@ function MainPage() {
   const IngredientOrMain = () => {
     if (componentState % 2 == 0 || windowWidth >= 768) return returnMain(); //768 - tablet size
 
-    return returnIngredientSearcher();
+    return returnFilter();
   };
 
   return (
@@ -72,7 +72,7 @@ function MainPage() {
 
         <Show above="md">
           <GridItem overflow="auto" padding="0.5rem" pl="2" area={"aside"}>
-            {returnIngredientSearcher()}
+            {returnFilter()}
           </GridItem>
         </Show>
 

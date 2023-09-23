@@ -1,6 +1,6 @@
-import { HStack, Text, IconButton } from "@chakra-ui/react";
+import { HStack, Text, IconButton, Spacer } from "@chakra-ui/react";
 import { MdDeleteOutline } from "react-icons/md";
-import { Ingredient } from "../App";
+import { Ingredient } from "../components/MainPage";
 
 interface Props {
   item: Ingredient;
@@ -10,8 +10,9 @@ interface Props {
 const ListItem = ({ item, onDelete }: Props) => {
   return (
     <li className="list-group-item">
-      <HStack justify="space-between">
+      <HStack>
         <Text margin={0}>{item.name}</Text>
+        <Spacer />
         <IconButton
           variant="ghost"
           colorScheme="red"
