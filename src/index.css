@@ -1,3 +1,16 @@
 body {
   overflow: hidden;
 }
+
+.hover:hover {
+  background-color: #dee2e6;
+  cursor: pointer;
+}
+
+.hover:active {
+  background-color: #c9cccf;
+}
+
+.relative {
+  position: relative;
+}

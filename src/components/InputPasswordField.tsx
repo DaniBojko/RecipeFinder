@@ -1,4 +1,9 @@
-import { IconButton, InputGroup, InputRightElement } from "@chakra-ui/react";
+import {
+  Icon,
+  IconButton,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { ErrorMessage } from "@hookform/error-message";
 import ErrorText from "./ErrorText";
@@ -39,7 +44,13 @@ const InputPasswordField = (
           ref={ref}
         />
         <InputRightElement>
-          <IconButton
+          <Icon
+            color={borderColor}
+            cursor="pointer"
+            as={show ? LuEye : LuEyeOff}
+            onClick={setShow}
+          />
+          {/*<IconButton
             aria-label={show ? "Hide password" : "Show password"}
             h="0"
             border="0"
@@ -47,7 +58,7 @@ const InputPasswordField = (
             colorScheme={colorScheme}
             icon={show ? <LuEye /> : <LuEyeOff />}
             onClick={setShow}
-          />
+  />*/}
         </InputRightElement>
       </InputGroup>
 

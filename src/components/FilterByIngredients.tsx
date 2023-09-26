@@ -1,12 +1,11 @@
 import IngredientList from "./IngredientList";
-
 import { Ingredient } from "../components/MainPage";
 import IngredientSearcher from "./IngredientSearcher";
 
 interface Props {
   ingredients: Ingredient[];
   deleteIngredient: (id: number) => void;
-  addIngredient: (item: string) => void;
+  addIngredient: (item: Ingredient) => void;
 }
 
 const FilterByIngredients = ({

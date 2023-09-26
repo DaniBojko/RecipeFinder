@@ -13,6 +13,20 @@ export interface Ingredient {
 const tmp = [
   { name: "vaj", id: 1 },
   { name: "sajt", id: 2 },
+  { name: "vaj", id: 11 },
+  { name: "sajt", id: 21 },
+  { name: "vaj", id: 12 },
+  { name: "sajt", id: 22 },
+  { name: "vaj", id: 13 },
+  { name: "sajt", id: 23 },
+  { name: "vaj", id: 10 },
+  { name: "sajt", id: 20 },
+  { name: "vaj", id: 110 },
+  { name: "sajt", id: 210 },
+  { name: "vaj", id: 120 },
+  { name: "sajt", id: 202 },
+  { name: "vaj", id: 130 },
+  { name: "sajt", id: 203 },
 ];
 
 function MainPage() {
@@ -26,10 +40,13 @@ function MainPage() {
       updateIngredients(
         ingredients.filter((ingredient) => ingredient.id != deleteById)
       );
+    console.log("MAIN - DELETE: " + deleteById);
   };
 
-  const addIngredient = (item: string) => {
-    if (item) updateIngredients([{ name: item, id: 5 }, ...ingredients]); // FIX WITH DATA
+  const addIngredient = (item: Ingredient) => {
+    if (!ingredients.some((i) => i.id === item.id))
+      updateIngredients([item, ...ingredients]);
+    else console.log("MAIN - ADD: ciki");
   };
 
   const returnFilter = () => {
