@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useWindowSize } from "../hooks/useWindowSize";
 import FilterByIngredients from "./FilterByIngredients";
 import NavBar from "./NavBar";
+import RecipeList from "./RecipeList";
 
 export interface Ingredient {
   name: string;
@@ -60,11 +61,7 @@ function MainPage() {
   };
 
   const returnMain = () => {
-    return (
-      <p>
-        {windowWidth} {windowHeight}
-      </p>
-    );
+    return <RecipeList />;
   };
 
   const IngredientOrMain = () => {
@@ -93,13 +90,7 @@ function MainPage() {
           </GridItem>
         </Show>
 
-        <GridItem
-          overflow="auto"
-          bg="green.300"
-          padding="0.5rem"
-          pl="2"
-          area={"main"}
-        >
+        <GridItem overflow="auto" padding="0.5rem" pl="2" area={"main"}>
           {IngredientOrMain()}
         </GridItem>
       </Grid>
