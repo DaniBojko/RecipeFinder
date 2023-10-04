@@ -12,7 +12,7 @@ import { normalizeImage } from "../services/normalizeImage";
 
 function RecipeCard(recipe: Recipe) {
   return (
-    <Card variant="filled" overflow="hidden">
+    <Card variant="filled" overflow="hidden" maxWidth="300px">
       <Image
         className="img"
         objectFit="cover"

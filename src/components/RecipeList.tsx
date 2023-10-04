@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import RecipeCard from "./RecipeCard";
-import { SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { tmp } from "../services/tmp-data";
-
-const MAX_RESULT_COUNT = 10;
 
 interface Step {
   number: number;
@@ -45,32 +43,34 @@ export interface Recipe {
   title: string;
 }
 
-const RecipeList = () => {
-  //const [recipes, setRecipes] = useState<Recipe[]>([]);
+interface Props {
+  requestURL: string;
+}
+
+const RecipeList = ({ requestURL }: Props) => {
   const [recipes, setRecipes] = useState(tmp);
   const [error, setError] = useState("");
 
   /*useEffect(() => {
     apiClient
-      .get(
-        "/complexSearch?number=10&addRecipeNutrition=true&intolerances=gluten&instructionsRequired=true&includeIngredients=cheese,pork"
-      )
+      .get(requestURL)
       .then((res) => {
-        console.log(JSON.stringify(res.data.results, null, 2));
         setRecipes(res.data.results);
+        console.log("Data fetched succesfully.");
+        console.log(res.data);
       })
       .catch((err) => setError(err.message));
-  }, []);*/
+  }, [requestURL]);*/
 
   return (
-    <>
+    <Box height="100vh" overflow="auto">
       {error && <p>{error}</p>}
       <SimpleGrid minChildWidth="250px" spacing={5}>
         {recipes.map((recipe) => (
           <RecipeCard key={recipe.id} {...recipe}></RecipeCard>
         ))}
       </SimpleGrid>
-    </>
+    </Box>
   );
 };
 
