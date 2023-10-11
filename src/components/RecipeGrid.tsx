@@ -53,7 +53,7 @@ const RecipeGrid = ({ requestURL }: Props) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const skeletons = [1, 2, 3, 4];
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8];
   //console.log(recipes);
 
   /*useEffect(() => {

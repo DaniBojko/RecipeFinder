@@ -14,7 +14,7 @@ import Select from "react-select";
 import { diets, ingredients, intolerances } from "../assets/StaticData";
 import { useRef, useState } from "react";
 import { requestLinkBuilder } from "../services/requestLinkBuilder";
-import { reactSelectStyles } from "../assets/StyleVariables";
+import { colorPalette, reactSelectStyles } from "../assets/StyleVariables";
 import DrawerText from "./DrawerText";
 import RangeSelect from "./RangeSelect";
 
@@ -34,6 +34,9 @@ export interface FilterObject {
   intolerances: ReactSelectData[];
   ingredients: ReactSelectData[];
   calorieRange: Range;
+  carbRange: Range;
+  proteinRange: Range;
+  fatRange: Range;
 }
 
 interface Props {
@@ -43,12 +46,18 @@ interface Props {
 const FilterDrawer = ({ onClick }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
-  const calorieRange = [0, 3000];
+  const calorieRange = [0, 1500];
+  const carbRange = [0, 300];
+  const proteinRange = [0, 100];
+  const fatRange = [0, 100];
   const [filter, updateFilter] = useState<FilterObject>({
     diets: [],
     intolerances: [],
     ingredients: [],
     calorieRange: { rangeStart: calorieRange[0], rangeEnd: calorieRange[1] },
+    carbRange: { rangeStart: carbRange[0], rangeEnd: carbRange[1] },
+    proteinRange: { rangeStart: proteinRange[0], rangeEnd: proteinRange[1] },
+    fatRange: { rangeStart: fatRange[0], rangeEnd: fatRange[1] },
   });
 
   const handleClick = () => {
@@ -77,9 +86,9 @@ const FilterDrawer = ({ onClick }: Props) => {
           <DrawerHeader fontSize="2xl" marginY="10px" color="#fff">
             Filter recipes
           </DrawerHeader>
-          <DrawerBody backgroundColor="#fff" borderTopRadius="20px">
+          <DrawerBody backgroundColor="#fff">
             <Box marginTop="15px" marginBottom={marginBottom}>
-              <DrawerText>Add ingredients</DrawerText>
+              <DrawerText>Ingredients</DrawerText>
               <Select
                 options={ingredients}
                 isMulti
@@ -94,7 +103,7 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
             <Box marginBottom={marginBottom}>
-              <DrawerText>Placeholder</DrawerText>
+              <DrawerText>Diets</DrawerText>
               <Select
                 options={diets}
                 isMulti
@@ -109,7 +118,7 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
             <Box marginBottom={marginBottom}>
-              <DrawerText>Placeholder</DrawerText>
+              <DrawerText>Intolerances</DrawerText>
               <Select
                 options={intolerances}
                 isMulti
@@ -124,21 +133,72 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
 
-            <RangeSelect
-              rangeStart={calorieRange[0]}
-              rangeEnd={calorieRange[1]}
-              step={50}
-              value={filter.calorieRange}
-              onChange={(data: Range) => {
-                updateFilter((prevState) => ({
-                  ...prevState,
-                  calorieRange: data,
-                }));
-              }}
-            />
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Calories</DrawerText>
+              <RangeSelect
+                rangeStart={calorieRange[0]}
+                rangeEnd={calorieRange[1]}
+                step={50}
+                value={filter.calorieRange}
+                onChange={(data: Range) => {
+                  updateFilter((prevState) => ({
+                    ...prevState,
+                    calorieRange: data,
+                  }));
+                }}
+              />
+            </Box>
+
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Carbs</DrawerText>
+              <RangeSelect
+                rangeStart={carbRange[0]}
+                rangeEnd={carbRange[1]}
+                value={filter.carbRange}
+                onChange={(data: Range) => {
+                  updateFilter((prevState) => ({
+                    ...prevState,
+                    carbRange: data,
+                  }));
+                }}
+              />
+            </Box>
+
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Protein</DrawerText>
+              <RangeSelect
+                rangeStart={proteinRange[0]}
+                rangeEnd={proteinRange[1]}
+                value={filter.proteinRange}
+                onChange={(data: Range) => {
+                  updateFilter((prevState) => ({
+                    ...prevState,
+                    proteinRange: data,
+                  }));
+                }}
+              />
+            </Box>
+
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Fat</DrawerText>
+              <RangeSelect
+                rangeStart={fatRange[0]}
+                rangeEnd={fatRange[1]}
+                value={filter.fatRange}
+                onChange={(data: Range) => {
+                  updateFilter((prevState) => ({
+                    ...prevState,
+                    fatRange: data,
+                  }));
+                }}
+              />
+            </Box>
           </DrawerBody>
 
-          <DrawerFooter backgroundColor="#fff">
+          <DrawerFooter
+            backgroundColor="#fff"
+            borderTop={`1px solid ${colorPalette.primary}`}
+          >
             <Button
               width="100%"
               variant="solid"

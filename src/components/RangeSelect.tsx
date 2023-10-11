@@ -15,7 +15,7 @@ import { Range } from "./FilterDrawer";
 interface Props {
   rangeStart: number;
   rangeEnd: number;
-  step: number;
+  step?: number;
   value: Range;
   onChange: (data: Range) => void;
 }
@@ -23,7 +23,7 @@ interface Props {
 const RangeSelect = ({
   rangeStart,
   rangeEnd,
-  step,
+  step = 1,
   value,
   onChange,
 }: Props) => {
@@ -61,12 +61,24 @@ const RangeSelect = ({
       <form onSubmit={handleSubmit}>
         <HStack>
           <Input
+            border={`2px solid ${colorPalette.secondary}`}
+            _hover={{ borderColor: colorPalette.primary }}
+            _focusVisible={{
+              boxShadow: "0",
+              border: `2px solid ${colorPalette.primary}`,
+            }}
             ref={minRef}
             colorScheme="orange"
             type="number"
             defaultValue={value.rangeStart}
           />
           <Input
+            border={`2px solid ${colorPalette.secondary}`}
+            _hover={{ borderColor: colorPalette.primary }}
+            _focusVisible={{
+              boxShadow: "0",
+              border: `2px solid ${colorPalette.primary}`,
+            }}
             ref={maxRef}
             colorScheme="orange"
             type="number"
