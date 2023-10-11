@@ -1,6 +1,5 @@
 import { PiWarningDuotone } from "react-icons/pi";
 import { Icon } from "@chakra-ui/icons";
-
 import { Center, HStack, Text } from "@chakra-ui/react";
 
 interface Props {

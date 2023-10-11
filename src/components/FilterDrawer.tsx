@@ -1,5 +1,5 @@
-import { AddIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -8,23 +8,32 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { diets, ingredients, intolerances } from "../assets/StaticData";
 import { useRef, useState } from "react";
 import { requestLinkBuilder } from "../services/requestLinkBuilder";
+import { reactSelectStyles } from "../assets/StyleVariables";
+import DrawerText from "./DrawerText";
+import RangeSelect from "./RangeSelect";
+
+const marginBottom = "20px";
 
 export interface ReactSelectData {
   value: string;
   label: string;
+}
+export interface Range {
+  rangeStart: number;
+  rangeEnd: number;
 }
 
 export interface FilterObject {
   diets: ReactSelectData[];
   intolerances: ReactSelectData[];
   ingredients: ReactSelectData[];
+  calorieRange: Range;
 }
 
 interface Props {
@@ -34,27 +43,28 @@ interface Props {
 const FilterDrawer = ({ onClick }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
+  const calorieRange = [0, 3000];
   const [filter, updateFilter] = useState<FilterObject>({
     diets: [],
     intolerances: [],
     ingredients: [],
+    calorieRange: { rangeStart: calorieRange[0], rangeEnd: calorieRange[1] },
   });
-  const link = requestLinkBuilder(filter);
 
   const handleClick = () => {
-    onClick(link);
+    onClick(requestLinkBuilder(filter));
   };
 
   return (
     <>
-      <IconButton
-        colorScheme="teal"
+      <Button
+        colorScheme="orange"
         ref={btnRef}
-        variant="ghost"
-        aria-label="Ingredient list"
-        icon={<AddIcon />}
+        variant="solid"
         onClick={onOpen}
-      ></IconButton>
+      >
+        Filter
+      </Button>
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -62,66 +72,83 @@ const FilterDrawer = ({ onClick }: Props) => {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Create your account</DrawerHeader>
+        <DrawerContent backgroundImage="radial-gradient(circle, #fecd45, #f3b134, #e69526, #d8791c, #c85d16)">
+          <DrawerCloseButton color="#fff" />
+          <DrawerHeader fontSize="2xl" marginY="10px" color="#fff">
+            Filter recipes
+          </DrawerHeader>
+          <DrawerBody backgroundColor="#fff" borderTopRadius="20px">
+            <Box marginTop="15px" marginBottom={marginBottom}>
+              <DrawerText>Add ingredients</DrawerText>
+              <Select
+                options={ingredients}
+                isMulti
+                defaultValue={filter.ingredients}
+                styles={reactSelectStyles}
+                onChange={(data) => {
+                  updateFilter({
+                    ...filter,
+                    ingredients: data as ReactSelectData[],
+                  });
+                }}
+              />
+            </Box>
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Placeholder</DrawerText>
+              <Select
+                options={diets}
+                isMulti
+                defaultValue={filter?.diets}
+                styles={reactSelectStyles}
+                onChange={(data) => {
+                  updateFilter({
+                    ...filter,
+                    diets: data as ReactSelectData[],
+                  });
+                }}
+              />
+            </Box>
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Placeholder</DrawerText>
+              <Select
+                options={intolerances}
+                isMulti
+                defaultValue={filter.intolerances}
+                styles={reactSelectStyles}
+                onChange={(data) => {
+                  updateFilter({
+                    ...filter,
+                    intolerances: data as ReactSelectData[],
+                  });
+                }}
+              />
+            </Box>
 
-          <DrawerBody>
-            <Select
-              options={ingredients}
-              isMulti
-              defaultValue={filter.ingredients}
-              onChange={(data) => {
-                updateFilter({
-                  ...filter,
-                  ingredients: data as ReactSelectData[],
-                });
-              }}
-            />
-            <Select
-              options={diets}
-              isMulti
-              defaultValue={filter?.diets}
-              onChange={(data) => {
-                updateFilter({ ...filter, diets: data as ReactSelectData[] });
-              }}
-            />
-            <Select
-              options={intolerances}
-              isMulti
-              defaultValue={filter.intolerances}
-              onChange={(data) => {
-                updateFilter({
-                  ...filter,
-                  intolerances: data as ReactSelectData[],
-                });
+            <RangeSelect
+              rangeStart={calorieRange[0]}
+              rangeEnd={calorieRange[1]}
+              step={50}
+              value={filter.calorieRange}
+              onChange={(data: Range) => {
+                updateFilter((prevState) => ({
+                  ...prevState,
+                  calorieRange: data,
+                }));
               }}
             />
           </DrawerBody>
 
-          <DrawerFooter>
+          <DrawerFooter backgroundColor="#fff">
             <Button
-              variant="outline"
-              mr={3}
-              onClick={() => {
-                onClose();
-                updateFilter({
-                  diets: [],
-                  intolerances: [],
-                  ingredients: [],
-                });
-              }}
-            >
-              Discard
-            </Button>
-            <Button
-              colorScheme="blue"
+              width="100%"
+              variant="solid"
+              colorScheme="orange"
               onClick={() => {
                 handleClick();
                 onClose();
               }}
             >
-              Save
+              Save changes
             </Button>
           </DrawerFooter>
         </DrawerContent>

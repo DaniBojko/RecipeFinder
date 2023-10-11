@@ -2,48 +2,12 @@ body {
   overflow: hidden;
 }
 
-.hover:hover {
-  background-color: #e2e8f0;
-  cursor: pointer;
-}
-
-.hover:active {
-  background-color: #c9cccf;
-}
-
-.relative {
-  position: relative;
-}
-
 .img {
-  transform: scale(1.2);
-  transform-origin: 50% 50%;
+  transform: scale(1.27);
 }
 
-.overflow {
-  overflow: hidden;
-}
-
-.button {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 2.5rem;
-  border-radius: 5px;
-  background-color: #edf2f7;
-  padding: 0 1rem 0 1rem;
-}
-
-.button:hover {
-  background-color: #e2e8f0;
-  cursor: pointer;
-}
-
-.align-center {
-  display: flex;
-  align-items: center;
-}
-
-.cursor {
+.card:hover {
+  translate: 0px -3px;
+  box-shadow: 0px 0px 0px 3px #fec445;
   cursor: pointer;
 }
