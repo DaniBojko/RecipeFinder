@@ -4,6 +4,7 @@ export const requestLinkBuilder = (filterData: FilterObject) => {
   let diets = filterData.diets.map((data) => data.value).join("|");
   let intolerances = filterData.intolerances.map((d) => d.value).join(",");
   let ingredients = filterData.ingredients.map((d) => d.value).join(",+");
+  let mealType = filterData.mealType.value;
   let calorieRange = `&minCalories=${filterData.calorieRange.rangeStart}&maxCalories=${filterData.calorieRange.rangeEnd}`;
   let carbRange = `&minCarbs=${filterData.carbRange.rangeStart}&maxCarbs=${filterData.carbRange.rangeEnd}`;
   let proteinRange = `&minProtein=${filterData.proteinRange.rangeStart}&maxProtein=${filterData.proteinRange.rangeEnd}`;
@@ -13,6 +14,7 @@ export const requestLinkBuilder = (filterData: FilterObject) => {
   if (intolerances) intolerances = `&intolerances=${intolerances}`;
   if (ingredients)
     ingredients = `&sort=min-missing-ingredients&includeIngredients=${ingredients}`;
+  if (mealType) mealType = `&type=${mealType}`;
 
   const retValue =
     diets +
@@ -21,8 +23,10 @@ export const requestLinkBuilder = (filterData: FilterObject) => {
     calorieRange +
     carbRange +
     proteinRange +
-    fatRange;
-  console.log(retValue);
+    fatRange +
+    mealType;
+
+  console.log("RETVAL: " + retValue);
 
   return retValue;
 };

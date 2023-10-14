@@ -11,10 +11,19 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { diets, ingredients, intolerances } from "../assets/StaticData";
+import {
+  diets,
+  ingredients,
+  intolerances,
+  mealTypes,
+} from "../assets/StaticData";
 import { useRef, useState } from "react";
 import { requestLinkBuilder } from "../services/requestLinkBuilder";
-import { colorPalette, reactSelectStyles } from "../assets/StyleVariables";
+import {
+  colorPalette,
+  reactMultiSelectStyles,
+  reactSingleSelectStyles,
+} from "../assets/StyleVariables";
 import DrawerText from "./DrawerText";
 import RangeSelect from "./RangeSelect";
 
@@ -33,6 +42,7 @@ export interface FilterObject {
   diets: ReactSelectData[];
   intolerances: ReactSelectData[];
   ingredients: ReactSelectData[];
+  mealType: ReactSelectData;
   calorieRange: Range;
   carbRange: Range;
   proteinRange: Range;
@@ -40,7 +50,7 @@ export interface FilterObject {
 }
 
 interface Props {
-  onClick: (link: string) => void;
+  onClick: (data: string) => void;
 }
 
 const FilterDrawer = ({ onClick }: Props) => {
@@ -54,6 +64,7 @@ const FilterDrawer = ({ onClick }: Props) => {
     diets: [],
     intolerances: [],
     ingredients: [],
+    mealType: { value: "", label: "" },
     calorieRange: { rangeStart: calorieRange[0], rangeEnd: calorieRange[1] },
     carbRange: { rangeStart: carbRange[0], rangeEnd: carbRange[1] },
     proteinRange: { rangeStart: proteinRange[0], rangeEnd: proteinRange[1] },
@@ -93,7 +104,7 @@ const FilterDrawer = ({ onClick }: Props) => {
                 options={ingredients}
                 isMulti
                 defaultValue={filter.ingredients}
-                styles={reactSelectStyles}
+                styles={reactMultiSelectStyles}
                 onChange={(data) => {
                   updateFilter({
                     ...filter,
@@ -108,7 +119,7 @@ const FilterDrawer = ({ onClick }: Props) => {
                 options={diets}
                 isMulti
                 defaultValue={filter?.diets}
-                styles={reactSelectStyles}
+                styles={reactMultiSelectStyles}
                 onChange={(data) => {
                   updateFilter({
                     ...filter,
@@ -123,11 +134,28 @@ const FilterDrawer = ({ onClick }: Props) => {
                 options={intolerances}
                 isMulti
                 defaultValue={filter.intolerances}
-                styles={reactSelectStyles}
+                styles={reactMultiSelectStyles}
                 onChange={(data) => {
                   updateFilter({
                     ...filter,
                     intolerances: data as ReactSelectData[],
+                  });
+                }}
+              />
+            </Box>
+
+            <Box marginBottom={marginBottom}>
+              <DrawerText>Meal type</DrawerText>
+              <Select
+                options={mealTypes}
+                defaultValue={filter.mealType}
+                isClearable
+                styles={reactSingleSelectStyles}
+                onChange={(data) => {
+                  console.log(data);
+                  updateFilter({
+                    ...filter,
+                    mealType: data as ReactSelectData,
                   });
                 }}
               />

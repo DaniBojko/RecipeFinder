@@ -1,28 +1,38 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import RecipeGrid from "./RecipeGrid";
-import { useState } from "react";
 import { theme } from "../assets/StyleVariables";
-
-const MAX_RESULT_COUNT = 1;
-const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired=true&ignorePantry=true`;
+import { useState } from "react";
 
 function MainPage() {
-  const [requestURL, setRequestURL] = useState(BASE_URL);
+  const [requestURL, setRequestURL] = useState({
+    filter: "",
+    query: "",
+    page: "",
+  });
+
+  //const { recipes = tmp, error = "", isLoading = false } = {};
+
+  /*console.log(
+    recipes.totalResults,
+    recipes.number,
+    Math.ceil(recipes.totalResults / recipes.number)
+  );*/
 
   return (
     <ChakraProvider theme={theme}>
       <NavBar
-        onClick={(filterOptions) => {
-          const url = BASE_URL + filterOptions;
-          if (url != requestURL) {
-            setRequestURL(BASE_URL + filterOptions);
-            console.log(url);
-          }
+        onClick={(data) => {
+          setRequestURL((prev) => ({ ...prev, ...data }));
         }}
       />
 
-      <RecipeGrid requestURL={requestURL} />
+      <RecipeGrid
+        requestURL={requestURL}
+        onClick={(data) => {
+          setRequestURL((prev) => ({ ...prev, page: data }));
+        }}
+      />
     </ChakraProvider>
   );
 }

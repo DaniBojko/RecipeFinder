@@ -14,7 +14,36 @@ export const colorPalette = {
   accent: "#007369",
 };
 
-export const reactSelectStyles = {
+export const reactSingleSelectStyles = {
+  control: (
+    baseStyles: CSSObjectWithLabel,
+    state: ControlProps<ReactSelectData, false, GroupBase<ReactSelectData>>
+  ) => ({
+    ...baseStyles,
+    boxShadow: "none",
+    border: `2px solid  ${
+      !state.isFocused ? colorPalette.secondary : colorPalette.primary
+    }`,
+    borderRadius: "0",
+    ":hover": {
+      borderColor: colorPalette.primary,
+    },
+  }),
+  option: (
+    baseStyles: CSSObjectWithLabel,
+    state: OptionProps<ReactSelectData, false, GroupBase<ReactSelectData>>
+  ) => ({
+    ...baseStyles,
+    color: state.isSelected ? colorPalette.primary : "000",
+    fontWeight: state.isSelected ? "500" : "normal",
+    backgroundColor: state.isFocused ? colorPalette.secondaryLight : "fff",
+    ":active": {
+      backgroundColor: colorPalette.secondaryLight,
+    },
+  }),
+};
+
+export const reactMultiSelectStyles = {
   control: (
     baseStyles: CSSObjectWithLabel,
     state: ControlProps<ReactSelectData, true, GroupBase<ReactSelectData>>

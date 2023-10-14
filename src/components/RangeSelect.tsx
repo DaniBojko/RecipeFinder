@@ -68,7 +68,6 @@ const RangeSelect = ({
               border: `2px solid ${colorPalette.primary}`,
             }}
             ref={minRef}
-            colorScheme="orange"
             type="number"
             defaultValue={value.rangeStart}
           />
@@ -80,7 +79,6 @@ const RangeSelect = ({
               border: `2px solid ${colorPalette.primary}`,
             }}
             ref={maxRef}
-            colorScheme="orange"
             type="number"
             defaultValue={value.rangeEnd}
           />

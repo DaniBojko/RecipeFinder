@@ -9,6 +9,23 @@ export const diets: ReactSelectData[] = [
   { value: "vegetarian", label: "Vegetarian" },
 ];
 
+export const mealTypes: ReactSelectData[] = [
+  { value: "main course", label: "Main course" },
+  { value: "breakfast", label: "Breakfast" },
+  { value: "side dish", label: "Side dish" },
+  { value: "dessert", label: "Dessert" },
+  { value: "salad", label: "Salad" },
+  { value: "soup", label: "Soup" },
+  { value: "snack", label: "Snack" },
+  { value: "appetizer", label: "Appetizer" },
+  { value: "fingerfood", label: "Fingerfood" },
+  { value: "bread", label: "Bread" },
+  { value: "marinade", label: "Marinade" },
+  { value: "sauce", label: "Sauce" },
+  { value: "beverage", label: "Beverage" },
+  { value: "drink", label: "Drink" },
+];
+
 export const intolerances: ReactSelectData[] = [
   { value: "dairy", label: "Dairy" },
   { value: "egg", label: "Egg" },
