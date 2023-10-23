@@ -15,7 +15,6 @@ const NavBar = ({ onClick }: Props) => {
     <Flex
       padding="20px"
       alignItems="center"
-      height="10vh"
       backgroundColor="#fff"
       borderBottom={`1px solid ${colorPalette.secondary}`}
     >

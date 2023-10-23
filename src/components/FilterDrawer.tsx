@@ -118,7 +118,7 @@ const FilterDrawer = ({ onClick }: Props) => {
               <Select
                 options={diets}
                 isMulti
-                defaultValue={filter?.diets}
+                defaultValue={filter.diets}
                 styles={reactMultiSelectStyles}
                 onChange={(data) => {
                   updateFilter({
@@ -152,7 +152,6 @@ const FilterDrawer = ({ onClick }: Props) => {
                 isClearable
                 styles={reactSingleSelectStyles}
                 onChange={(data) => {
-                  console.log(data);
                   updateFilter({
                     ...filter,
                     mealType: data as ReactSelectData,

@@ -47,7 +47,9 @@ const SearchBar = ({ onClick }: Props) => {
             <InputRightElement pointerEvents="all">
               <SmallCloseIcon
                 cursor="pointer"
-                onClick={() => setSearchValue("")}
+                onClick={() => {
+                  setSearchValue("");
+                }}
               />
             </InputRightElement>
           )}

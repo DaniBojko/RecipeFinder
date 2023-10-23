@@ -23,13 +23,12 @@ const RecipeGrid = ({ requestURL, onClick }: Props) => {
 
   return (
     <Flex
-      height="90vh"
-      overflow="auto"
-      backgroundImage="linear-gradient(to bottom,#fff 1.5%,#f0f9f9 5.5%)"
       justifyContent="center"
+      padding="20px"
+      backgroundImage="linear-gradient(to bottom,#fff 1.5%,#f0f9f9 5.5%)"
     >
-      <Box padding="20px">
-        {error && <p>{error}</p>}
+      <Box>
+        {error && <p>{error} </p>}
         <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="1.5rem">
           {isLoading &&
             skeletons.map((skeleton) => <RecipeSkeleton key={skeleton} />)}
@@ -37,14 +36,15 @@ const RecipeGrid = ({ requestURL, onClick }: Props) => {
             <RecipeCard key={recipe.id} {...recipe}></RecipeCard>
           ))}
         </SimpleGrid>
+
         <HStack marginTop="2rem">
           <IconButton
             aria-label="Previous page"
             colorScheme="orange"
             isDisabled={recipes.offset === 0}
-            onClick={() =>
-              onClick(`&offset=${recipes.offset - recipes.number}`)
-            }
+            onClick={() => {
+              onClick(`&offset=${recipes.offset - recipes.number}`);
+            }}
             icon={<ArrowBackIcon />}
           ></IconButton>
           <Spacer />
@@ -52,9 +52,9 @@ const RecipeGrid = ({ requestURL, onClick }: Props) => {
             aria-label="Next page"
             colorScheme="orange"
             isDisabled={recipes.offset / recipes.number === maxPages}
-            onClick={() =>
-              onClick(`&offset=${recipes.offset + recipes.number}`)
-            }
+            onClick={() => {
+              onClick(`&offset=${recipes.offset + recipes.number}`);
+            }}
             icon={<ArrowForwardIcon />}
           ></IconButton>
         </HStack>

@@ -1,8 +1,8 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import RecipeGrid from "./RecipeGrid";
 import { theme } from "../assets/StyleVariables";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function MainPage() {
   const [requestURL, setRequestURL] = useState({
@@ -11,28 +11,29 @@ function MainPage() {
     page: "",
   });
 
-  //const { recipes = tmp, error = "", isLoading = false } = {};
-
-  /*console.log(
-    recipes.totalResults,
-    recipes.number,
-    Math.ceil(recipes.totalResults / recipes.number)
-  );*/
+  useEffect(() => {
+    console.log("scrolled");
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [requestURL.page]);
 
   return (
     <ChakraProvider theme={theme}>
-      <NavBar
-        onClick={(data) => {
-          setRequestURL((prev) => ({ ...prev, ...data }));
-        }}
-      />
+      <Box position="sticky" top="0" zIndex="999">
+        <NavBar
+          onClick={(data) => {
+            setRequestURL((prev) => ({ ...prev, ...data }));
+          }}
+        />
+      </Box>
 
-      <RecipeGrid
-        requestURL={requestURL}
-        onClick={(data) => {
-          setRequestURL((prev) => ({ ...prev, page: data }));
-        }}
-      />
+      {
+        <RecipeGrid
+          requestURL={requestURL}
+          onClick={(data) => {
+            setRequestURL((prev) => ({ ...prev, page: data }));
+          }}
+        />
+      }
     </ChakraProvider>
   );
 }

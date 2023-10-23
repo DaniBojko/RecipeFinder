@@ -37,6 +37,7 @@ export interface Recipe {
   imageType: string;
   nutrition: Nutrition;
   readyInMinutes: number;
+  sourceUrl: string;
   servings: number;
   title: string;
 }
@@ -60,7 +61,7 @@ const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired
 const useRecipes = (requestURL: UrlType) => {
   const [recipes, setRecipes] = useState<ApiResponse>({
     number: 1,
-    offset: 1,
+    offset: 0,
     results: [],
     totalResults: 1,
   });
