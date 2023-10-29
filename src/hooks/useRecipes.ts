@@ -60,10 +60,10 @@ const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired
 
 const useRecipes = (requestURL: UrlType) => {
   const [recipes, setRecipes] = useState<ApiResponse>({
-    number: 1,
+    number: 0,
     offset: 0,
     results: [],
-    totalResults: 1,
+    totalResults: 0,
   });
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);

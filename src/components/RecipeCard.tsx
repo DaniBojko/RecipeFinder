@@ -32,61 +32,60 @@ function RecipeCard(recipe: Recipe) {
       borderRadius="0"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={() => (window.location.href = recipe.sourceUrl)}
     >
-      <a href={recipe.sourceUrl} target="_blank">
-        <Box overflow="hidden">
-          {hover && (
-            <Flex
-              width="100%"
-              padding="10px"
-              position="absolute"
-              justify="flex-end"
-            >
-              <Icon
-                _hover={{}}
-                position="relative"
-                cursor="pointer"
-                boxSize="48px"
-                opacity="1"
-                zIndex={1}
-                color={colorPalette.primary}
-                as={isFavourite ? PiHeartFill : PiHeartDuotone}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setFavourite(!isFavourite);
-                }}
-              />
-            </Flex>
-          )}
-          <Image
-            className="img"
-            src={normalizeImage(recipe.image, recipe.imageType)}
-          />
-        </Box>
-
-        <CardFooter paddingY="0" marginTop="1.25rem">
-          {recipe.readyInMinutes != null && (
-            <HStack color={colorPalette.accent} gap="0.2rem">
-              <Icon boxSize="17px" as={GoStopwatch} />
-              <Text fontSize="1rem" letterSpacing="-1px" margin="0">
-                {recipe.readyInMinutes} mins
-              </Text>
-            </HStack>
-          )}
-        </CardFooter>
-
-        <CardBody minH="100px">
-          <Heading
-            margin="0"
-            color="#222"
-            fontFamily="Frank Ruhl Libre, serif"
-            fontWeight="400"
-            fontSize="1.75rem"
+      <Box overflow="hidden">
+        {hover && (
+          <Flex
+            width="100%"
+            padding="10px"
+            position="absolute"
+            justify="flex-end"
           >
-            {recipe.title}
-          </Heading>
-        </CardBody>
-      </a>
+            <Icon
+              _hover={{}}
+              position="relative"
+              cursor="pointer"
+              boxSize="48px"
+              opacity="1"
+              zIndex={1}
+              color={colorPalette.primary}
+              as={isFavourite ? PiHeartFill : PiHeartDuotone}
+              onClick={(e) => {
+                e.stopPropagation();
+                setFavourite(!isFavourite);
+              }}
+            />
+          </Flex>
+        )}
+        <Image
+          className="img"
+          src={normalizeImage(recipe.image, recipe.imageType)}
+        />
+      </Box>
+
+      <CardFooter paddingY="0" marginTop="1.25rem">
+        {recipe.readyInMinutes != null && (
+          <HStack color={colorPalette.accent} gap="0.2rem">
+            <Icon boxSize="17px" as={GoStopwatch} />
+            <Text fontSize="1rem" letterSpacing="-1px" margin="0">
+              {recipe.readyInMinutes} mins
+            </Text>
+          </HStack>
+        )}
+      </CardFooter>
+
+      <CardBody minH="100px">
+        <Heading
+          margin="0"
+          color="#222"
+          fontFamily="Frank Ruhl Libre, serif"
+          fontWeight="400"
+          fontSize="1.75rem"
+        >
+          {recipe.title}
+        </Heading>
+      </CardBody>
     </Card>
   );
 }
