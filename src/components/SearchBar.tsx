@@ -17,7 +17,7 @@ const SearchBar = ({ onClick }: Props) => {
   const [searchValue, setSearchValue] = useState("");
 
   return (
-    <Box width="50%">
+    <Box width="50%" marginX="10px">
       <form
         onSubmit={(e) => {
           e.preventDefault();

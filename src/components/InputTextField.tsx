@@ -4,8 +4,9 @@ import { ErrorMessage } from "@hookform/error-message";
 import ErrorText from "./ErrorText";
 import { marginBottom, inputVariant } from "../assets/StyleVariables";
 import React from "react";
+import { colorPalette } from "../assets/StyleVariables";
 
-const borderColor = "#b83280";
+const borderColor = colorPalette.primary;
 
 export interface Props {
   err: FieldErrors;

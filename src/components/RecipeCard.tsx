@@ -35,7 +35,7 @@ function RecipeCard(recipe: Recipe) {
       onClick={() => (window.location.href = recipe.sourceUrl)}
     >
       <Box overflow="hidden">
-        {hover && (
+        {(hover || isFavourite) && (
           <Flex
             width="100%"
             padding="10px"

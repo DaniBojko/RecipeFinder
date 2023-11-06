@@ -4,8 +4,9 @@ import {
   Container,
   Text,
   ChakraProvider,
+  HStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { marginBottom } from "../assets/StyleVariables";
 import { useNavigate } from "react-router-dom";
@@ -16,16 +17,19 @@ const LogInForm = () => {
   const {
     register,
     handleSubmit,
+    setFocus,
     formState: { errors },
   } = useForm();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
-  const colorScheme = "teal";
+  const colorScheme = "orange";
 
   const onSubmit = (data: FieldValues) => {
     console.log(data);
   };
+
+  useEffect(() => setFocus("loginEmail"), []);
 
   return (
     <ChakraProvider>
@@ -78,15 +82,16 @@ const LogInForm = () => {
             {/* ------------------------------   REGISTER BUTTON   ------------------------------ */}
 
             <Center>
-              <Text margin="0">Not a member yet?</Text>
-              <Button
-                marginLeft="7px"
-                onClick={() => navigate("/register")}
-                colorScheme={colorScheme}
-                variant="link"
-              >
-                Register
-              </Button>
+              <HStack>
+                <Text margin="0">Not a member yet?</Text>
+                <Button
+                  onClick={() => navigate("/register")}
+                  colorScheme={colorScheme}
+                  variant="link"
+                >
+                  Register
+                </Button>
+              </HStack>
             </Center>
           </form>
         </Container>

@@ -1,19 +1,17 @@
-import {
-  Icon,
-  IconButton,
-  InputGroup,
-  InputRightElement,
-} from "@chakra-ui/react";
+import { Icon, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { ErrorMessage } from "@hookform/error-message";
 import ErrorText from "./ErrorText";
-import { marginBottom, inputVariant } from "../assets/StyleVariables";
+import {
+  marginBottom,
+  inputVariant,
+  colorPalette,
+} from "../assets/StyleVariables";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { FieldErrors, ChangeHandler } from "react-hook-form";
 import React from "react";
 
-const borderColor = "#b83280";
-const colorScheme = "pink";
+const borderColor = colorPalette.primary;
 
 export interface Props {
   err: FieldErrors;
@@ -50,15 +48,6 @@ const InputPasswordField = (
             as={show ? LuEye : LuEyeOff}
             onClick={setShow}
           />
-          {/*<IconButton
-            aria-label={show ? "Hide password" : "Show password"}
-            h="0"
-            border="0"
-            variant="outline"
-            colorScheme={colorScheme}
-            icon={show ? <LuEye /> : <LuEyeOff />}
-            onClick={setShow}
-  />*/}
         </InputRightElement>
       </InputGroup>
 

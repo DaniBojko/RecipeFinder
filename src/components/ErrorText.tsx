@@ -8,6 +8,7 @@ interface Props {
 
 const ErrorText = ({ children }: Props) => {
   const color = "#c2001d";
+  if (!children) return;
   return (
     <HStack>
       <Center>
