@@ -5,28 +5,80 @@ import {
   Text,
   ChakraProvider,
   HStack,
+  Flex,
+  Spinner,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { marginBottom } from "../assets/StyleVariables";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import InputPasswordField from "./InputPasswordField";
 import InputTextField from "./InputTextField";
+import backEnd from "../services/back-end";
+import ErrorText from "./ErrorText";
+import useAuth from "../hooks/useAuth";
 
 const LogInForm = () => {
   const {
     register,
     handleSubmit,
     setFocus,
+    setError,
     formState: { errors },
   } = useForm();
+
+  const { setAuth } = useAuth();
   const [show, setShow] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const colorScheme = "orange";
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  const onSubmit = async (data: FieldValues) => {
+    setIsSubmitting(true);
+    if (errMsg) setErrMsg("");
+    await backEnd
+      .post(
+        "/login",
+        { email: data.loginEmail, password: data.loginPassword },
+        {
+          headers: { "Content-Type": "application/json" },
+          //withCredentials: true,
+        }
+      )
+      .then((res) => {
+        setIsSubmitting(false);
+        const a = {
+          email: data.loginEmail,
+          password: data.loginPassword,
+          accessToken: res.data.accessToken,
+        };
+        console.log(a);
+        setAuth({ ...a });
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSubmitting(false);
+
+        if (!err?.response) {
+          setErrMsg("Server error, try again later.");
+          return;
+        }
+        if (err.response.status === 401) {
+          setErrMsg("E-mail or password is incorrect.");
+          setError(
+            "loginEmail",
+            {
+              type: "custom",
+            },
+            { shouldFocus: true }
+          );
+        } else {
+          setErrMsg("Login failed, please try again.");
+        }
+      });
   };
 
   useEffect(() => setFocus("loginEmail"), []);
@@ -76,10 +128,14 @@ const LogInForm = () => {
               type="submit"
               variant="outline"
             >
-              Log In
+              {isSubmitting ? <Spinner color="red.500" /> : "Log in"}
             </Button>
 
             {/* ------------------------------   REGISTER BUTTON   ------------------------------ */}
+
+            <Flex justify="center">
+              <ErrorText>{errMsg}</ErrorText>
+            </Flex>
 
             <Center>
               <HStack>

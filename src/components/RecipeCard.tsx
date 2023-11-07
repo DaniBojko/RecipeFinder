@@ -16,10 +16,14 @@ import { normalizeImage } from "../services/normalizeImage";
 import { colorPalette } from "../assets/StyleVariables";
 import { PiHeartDuotone, PiHeartFill } from "react-icons/pi";
 import { useState } from "react";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function RecipeCard(recipe: Recipe) {
   const [isFavourite, setFavourite] = useState(false);
   const [hover, setHover] = useState(false);
+  const { auth } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <Card
@@ -53,7 +57,12 @@ function RecipeCard(recipe: Recipe) {
               as={isFavourite ? PiHeartFill : PiHeartDuotone}
               onClick={(e) => {
                 e.stopPropagation();
-                setFavourite(!isFavourite);
+                if (Object.keys(auth).length !== 0) {
+                  setFavourite(!isFavourite);
+                  console.log(auth);
+                } else {
+                  navigate("/login");
+                }
               }}
             />
           </Flex>
