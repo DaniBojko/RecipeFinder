@@ -1,40 +1,33 @@
 import { useEffect, useState } from "react";
-import backEnd from "../services/back-end";
-import useRefreshToken from "../hooks/useRefreshToken";
-import { Button, ChakraProvider } from "@chakra-ui/react";
 import { CanceledError } from "axios";
+import useBackEndPrivate from "../hooks/useBackEndPrivate";
+import { useNavigate, useLocation } from "react-router-dom";
+
+type Response = {
+  email: string;
+  password: string;
+  refreshtoken: string;
+};
 
 const FavouriteList = () => {
-  const [recipes, setRecipes] = useState([]);
-  const refresh = useRefreshToken();
+  const [recipes, setRecipes] = useState<Response[]>([]);
+  const backEndPrivate = useBackEndPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const controller = new AbortController();
 
-    backEnd
+    backEndPrivate
       .get("/users", { signal: controller.signal })
       .then((res) => {
-        console.log("FVLIST");
-        console.log(res.data);
         setRecipes(res.data);
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
+        navigate("/login", { state: { from: location }, replace: true });
         console.log(err);
       });
-
-    /*const getFavourites = async () => {
-      await backEnd
-        .get("/users", { signal: controller.signal })
-        .then((res) => {
-          console.log("FVLIST");
-          console.log(res.data);
-          setRecipes(res.data);
-        })
-        .catch((err) => console.log(err));
-    };
-
-    getFavourites();*/
 
     return () => {
       controller.abort();
@@ -42,20 +35,17 @@ const FavouriteList = () => {
   }, []);
 
   return (
-    <ChakraProvider>
-      <Button variant="solid" colorScheme="green" onClick={() => refresh()}>
-        Refresh
-      </Button>
+    <>
       <h1>List</h1>
 
       {recipes.length !== 0 && (
         <ul>
           {recipes.map((recipe, index) => (
-            <li key={index}>{JSON.stringify(recipe)}</li>
+            <li key={index}>{recipe.email}</li>
           ))}
         </ul>
       )}
-    </ChakraProvider>
+    </>
   );
 };
 
