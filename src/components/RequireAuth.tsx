@@ -4,12 +4,10 @@ import useAuth from "../hooks/useAuth";
 const RequireAuth = () => {
   const { auth } = useAuth();
   const location = useLocation();
+  const hasAuthorized = Object.keys(auth).length !== 0;
 
-  return Object.keys(auth).length !== 0 ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  );
+  if (hasAuthorized) return <Outlet />;
+  else return <Navigate to="/login" state={{ from: location }} replace />;
 };
 
 export default RequireAuth;

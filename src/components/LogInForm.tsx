@@ -32,6 +32,7 @@ const LogInForm = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation().state?.from?.pathname || "/";
 
   const colorScheme = "orange";
 
@@ -43,8 +44,9 @@ const LogInForm = () => {
         "/login",
         { email: data.loginEmail, password: data.loginPassword },
         {
-          headers: { "Content-Type": "application/json" },
-          //withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       )
       .then((res) => {
@@ -53,10 +55,11 @@ const LogInForm = () => {
           email: data.loginEmail,
           password: data.loginPassword,
           accessToken: res.data.accessToken,
+          refreshToken: res.data.refreshToken,
         };
         console.log(a);
         setAuth({ ...a });
-        navigate("/");
+        navigate(location, { replace: true });
       })
       .catch((err) => {
         console.log(err);

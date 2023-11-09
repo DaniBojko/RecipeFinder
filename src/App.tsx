@@ -13,6 +13,10 @@ const App = () => {
       <Route path="/login" element={<LogInForm />} />
       <Route path="/register" element={<RegisterForm />} />
 
+      <Route element={<RequireAuth />}>
+        <Route path="/favourites" element={<FavouriteList />} />
+      </Route>
+
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

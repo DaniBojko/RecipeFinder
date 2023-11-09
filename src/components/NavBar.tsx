@@ -1,8 +1,19 @@
-import { Button, Flex, Spacer } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spacer,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import FilterDrawer from "./FilterDrawer";
 import { colorPalette } from "../assets/StyleVariables";
 import SearchBar from "./SearchBar";
+import useAuth from "../hooks/useAuth";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 interface Props {
   onClick: (data: object) => void;
@@ -10,6 +21,8 @@ interface Props {
 
 const NavBar = ({ onClick }: Props) => {
   const navigate = useNavigate();
+  const { auth, setAuth } = useAuth();
+  const hasAuthorized = Object.keys(auth).length !== 0;
 
   return (
     <Flex
@@ -22,13 +35,43 @@ const NavBar = ({ onClick }: Props) => {
       <Spacer />
       <SearchBar onClick={(data) => onClick({ query: data })} />
       <Spacer />
-      <Button
-        colorScheme="orange"
-        variant="solid"
-        onClick={() => navigate("/login")}
-      >
-        Log in
-      </Button>
+
+      {hasAuthorized ? (
+        <Menu autoSelect={false}>
+          <MenuButton
+            as={IconButton}
+            aria-label="Options"
+            icon={<HamburgerIcon />}
+            variant="solid"
+            colorScheme="orange"
+          />
+          <MenuList>
+            <MenuItem
+              _focus={{ backgroundColor: colorPalette.secondaryLight }}
+              onClick={() => navigate("/favourites")}
+            >
+              Favourites list
+            </MenuItem>
+            <MenuItem
+              _focus={{ backgroundColor: colorPalette.secondaryLight }}
+              onClick={() => {
+                setAuth({});
+                navigate("/");
+              }}
+            >
+              Log out
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      ) : (
+        <Button
+          colorScheme="orange"
+          variant="solid"
+          onClick={() => navigate("/login")}
+        >
+          Log in
+        </Button>
+      )}
     </Flex>
   );
 };

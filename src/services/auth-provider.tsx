@@ -4,8 +4,13 @@ interface Props {
   children: JSX.Element;
 }
 
+type AuthType = {
+  accessToken: string;
+  refreshToken: string;
+};
+
 export type ContextType = {
-  auth: object;
+  auth: AuthType;
   setAuth: React.Dispatch<React.SetStateAction<{}>>;
 };
 
