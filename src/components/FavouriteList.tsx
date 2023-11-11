@@ -2,17 +2,24 @@ import { useEffect, useState } from "react";
 import { CanceledError } from "axios";
 import useBackEndPrivate from "../hooks/useBackEndPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
-
-type Response = {
-  email: string;
-  password: string;
-  refreshtoken: string;
-};
+import NavBarWrapper from "./Wrappers/NavBarWrapper";
+import { Button, ChakraProvider, Spacer } from "@chakra-ui/react";
+import SearchBar from "./SearchBar";
+import useAuth from "../hooks/useAuth";
+import uselogOut from "../hooks/useLogout";
 
 const FavouriteList = () => {
-  const [recipes, setRecipes] = useState<Response[]>([]);
-  const backEndPrivate = useBackEndPrivate();
+  const { auth } = useAuth();
+  const logout = uselogOut();
+  const recipes = auth.favouriteList;
+  const [query, setQuery] = useState("");
+  let filteredRecipes = recipes.filter((recipe) => {
+    const tmp = recipe.toString();
+    return tmp.indexOf(query) !== -1;
+  });
   const navigate = useNavigate();
+  /*const [recipes, setRecipes] = useState<number[]>([]);
+  const backEndPrivate = useBackEndPrivate();
   const location = useLocation();
 
   useEffect(() => {
@@ -32,20 +39,34 @@ const FavouriteList = () => {
     return () => {
       controller.abort();
     };
-  }, []);
+  }, []);*/
 
   return (
-    <>
-      <h1>List</h1>
+    <ChakraProvider>
+      <NavBarWrapper>
+        <Button
+          colorScheme="orange"
+          variant="solid"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+        <Spacer />
+        <SearchBar onChange onSubmit={(query) => setQuery(query)}></SearchBar>
+        <Spacer />
 
+        <Button colorScheme="orange" variant="solid" onClick={() => logout()}>
+          Log out
+        </Button>
+      </NavBarWrapper>
       {recipes.length !== 0 && (
         <ul>
-          {recipes.map((recipe, index) => (
-            <li key={index}>{recipe.email}</li>
+          {filteredRecipes.map((recipe, index) => (
+            <li key={index}>{recipe}</li>
           ))}
         </ul>
       )}
-    </>
+    </ChakraProvider>
   );
 };
 

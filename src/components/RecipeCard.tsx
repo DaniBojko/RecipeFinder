@@ -1,11 +1,8 @@
 import {
   Box,
-  Card,
   CardBody,
   CardFooter,
-  Flex,
   HStack,
-  Heading,
   Icon,
   Image,
   Text,
@@ -14,88 +11,104 @@ import { GoStopwatch } from "react-icons/go";
 import { Recipe } from "../hooks/useRecipes";
 import { normalizeImage } from "../services/normalizeImage";
 import { colorPalette } from "../assets/StyleVariables";
-import { PiHeartDuotone, PiHeartFill } from "react-icons/pi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import useBackEndPrivate from "../hooks/useBackEndPrivate";
+import { useToast } from "@chakra-ui/react";
+import RecipeCardWrapper from "./Wrappers/RecipeCardWrapper";
+import FavIcon from "./FavIcon";
+import CardHeading from "./Wrappers/CardHeading";
 
 function RecipeCard(recipe: Recipe) {
-  const [isFavourite, setFavourite] = useState(false);
+  const { id, image, imageType, readyInMinutes, sourceUrl, title } = recipe;
+  const { auth, setAuth } = useAuth();
+  const isAuth = Object.keys(auth).length !== 0;
+  const [isFavourite, setFavourite] = useState(
+    isAuth && auth.favouriteList.includes(id)
+  );
   const [hover, setHover] = useState(false);
-  const { auth } = useAuth();
   const navigate = useNavigate();
+  const backEndPrivate = useBackEndPrivate();
+  const toast = useToast();
+
+  useEffect(() => {
+    if (isFavourite && !isAuth) {
+      console.log("state set");
+      setFavourite(false);
+    }
+  }, [isAuth]);
+
+  const sendFavourite = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+    e.stopPropagation();
+    backEndPrivate
+      .post("/users", { favourite: id })
+      .then((res) => {
+        setFavourite(res.data.state);
+        setAuth({
+          ...auth,
+          favouriteList: res.data.favouriteList,
+        });
+      })
+      .catch((err) => {
+        if (!err?.response) {
+          toast({
+            title: "Unable to connect to server.",
+            description: "Please try again later.",
+            status: "error",
+            duration: 3000,
+            variant: "subtle",
+          });
+          return;
+        } else if (err.response.status === 403) {
+          navigate("/login");
+          console.log(err);
+        } else {
+          toast({
+            title: "Server error.",
+            description: "Server could not handle the request.",
+            status: "error",
+            duration: 3000,
+            variant: "subtle",
+          });
+        }
+      });
+  };
 
   return (
-    <Card
-      className="card"
-      variant="outline"
-      border="0"
-      boxShadow="0"
-      overflow="hidden"
-      maxWidth={{ sm: "350px", xl: "275px" }}
-      borderRadius="0"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={() => (window.location.href = recipe.sourceUrl)}
-    >
-      <Box overflow="hidden">
-        {(hover || isFavourite) && (
-          <Flex
-            width="100%"
-            padding="10px"
-            position="absolute"
-            justify="flex-end"
-          >
-            <Icon
-              _hover={{}}
-              position="relative"
-              cursor="pointer"
-              boxSize="48px"
-              opacity="1"
-              zIndex={1}
-              color={colorPalette.primary}
-              as={isFavourite ? PiHeartFill : PiHeartDuotone}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (Object.keys(auth).length !== 0) {
-                  setFavourite(!isFavourite);
-                  console.log(auth);
-                } else {
-                  navigate("/login");
-                }
-              }}
-            />
-          </Flex>
-        )}
-        <Image
-          className="img"
-          src={normalizeImage(recipe.image, recipe.imageType)}
-        />
+    <RecipeCardWrapper>
+      <Box
+        onClick={() => (window.location.href = sourceUrl)}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
+        <Box overflow="hidden">
+          {(hover || isFavourite) && (
+            <FavIcon
+              isFavourite={isFavourite}
+              onClick={sendFavourite}
+            ></FavIcon>
+          )}
+
+          <Image className="img" src={normalizeImage(image, imageType)} />
+        </Box>
+
+        <CardFooter paddingY="0" marginTop="1.25rem">
+          {readyInMinutes != null && (
+            <HStack color={colorPalette.accent} gap="0.2rem">
+              <Icon boxSize="17px" as={GoStopwatch} />
+              <Text fontSize="1rem" letterSpacing="-1px" margin="0">
+                {readyInMinutes} mins
+              </Text>
+            </HStack>
+          )}
+        </CardFooter>
+
+        <CardBody minH="100px">
+          <CardHeading>{title}</CardHeading>
+        </CardBody>
       </Box>
-
-      <CardFooter paddingY="0" marginTop="1.25rem">
-        {recipe.readyInMinutes != null && (
-          <HStack color={colorPalette.accent} gap="0.2rem">
-            <Icon boxSize="17px" as={GoStopwatch} />
-            <Text fontSize="1rem" letterSpacing="-1px" margin="0">
-              {recipe.readyInMinutes} mins
-            </Text>
-          </HStack>
-        )}
-      </CardFooter>
-
-      <CardBody minH="100px">
-        <Heading
-          margin="0"
-          color="#222"
-          fontFamily="Frank Ruhl Libre, serif"
-          fontWeight="400"
-          fontSize="1.75rem"
-        >
-          {recipe.title}
-        </Heading>
-      </CardBody>
-    </Card>
+    </RecipeCardWrapper>
   );
 }
 

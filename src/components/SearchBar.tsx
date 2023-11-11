@@ -1,27 +1,36 @@
 import { SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { colorPalette } from "../assets/StyleVariables";
+import { useRef, useState } from "react";
+import SearchBarWrapper from "./Wrappers/SearchBarWrapper";
 
 interface Props {
-  onClick: (data: string) => void;
+  onSubmit: (query: string) => void;
+  onChange?: boolean;
 }
 
-const SearchBar = ({ onClick }: Props) => {
-  const [searchValue, setSearchValue] = useState("");
+const SearchBar = ({ onSubmit, onChange = false }: Props) => {
+  const searchBarRef = useRef<HTMLInputElement>(null);
+  const [query, setQuery] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   return (
-    <Box width="50%" marginX="10px">
+    <SearchBarWrapper>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (searchValue) onClick(`&query=${searchValue}`);
+          if (!onChange) {
+            onSubmit(query);
+            !isSubmitted && setIsSubmitted(true);
+            if (searchBarRef.current !== null) {
+              searchBarRef.current.blur();
+            }
+          }
         }}
       >
         <InputGroup>
@@ -33,29 +42,36 @@ const SearchBar = ({ onClick }: Props) => {
             <SearchIcon />
           </InputLeftElement>
           <Input
+            ref={searchBarRef}
             variant="filled"
-            value={searchValue}
+            type="text"
             placeholder="Search recipes..."
+            value={query}
             _focusVisible={{
               boxShadow: "0",
               border: `2px solid ${colorPalette.primary}`,
               backgroundColor: "white",
             }}
-            onChange={(value) => setSearchValue(value.target.value)}
+            onChange={(query) => {
+              setQuery(query.target.value);
+              onChange && onSubmit(query.target.value);
+            }}
           />
-          {searchValue && (
+          {((onChange && query.length > 0) || isSubmitted) && (
             <InputRightElement pointerEvents="all">
               <SmallCloseIcon
                 cursor="pointer"
                 onClick={() => {
-                  setSearchValue("");
+                  setQuery("");
+                  isSubmitted && setIsSubmitted(false);
+                  onSubmit("");
                 }}
               />
             </InputRightElement>
           )}
         </InputGroup>
       </form>
-    </Box>
+    </SearchBarWrapper>
   );
 };
 

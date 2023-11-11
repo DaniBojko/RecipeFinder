@@ -5,8 +5,11 @@ interface Props {
 }
 
 type AuthType = {
+  email: string;
+  password: string;
   accessToken: string;
   refreshToken: string;
+  favouriteList: number[];
 };
 
 export type ContextType = {

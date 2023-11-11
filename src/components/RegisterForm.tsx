@@ -1,20 +1,13 @@
-import {
-  Button,
-  Center,
-  ChakraProvider,
-  Container,
-  Flex,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Center, Flex, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import ErrorText from "./ErrorText";
-import { marginBottom } from "../assets/StyleVariables";
+import { colorPalette, marginBottom } from "../assets/StyleVariables";
 import InputTextField from "./InputTextField";
 import InputPasswordField from "./InputPasswordField";
 import backEnd from "../services/back-end";
 import { useNavigate } from "react-router-dom";
+import FormWrapper from "./Wrappers/FormWrapper";
 
 const RegisterForm = () => {
   const {
@@ -36,16 +29,15 @@ const RegisterForm = () => {
   const colorScheme = "orange";
   const navigate = useNavigate();
 
-  const onSubmit = async (data: FieldValues) => {
+  const onSubmit = (data: FieldValues) => {
     setErrMsg("");
     setIsSubmitting(true);
-    await backEnd
+    backEnd
       .post(
         "/register",
         { email: data.email, password: data.password },
         {
           headers: { "Content-Type": "application/json" },
-          //withCredentials: true,
         }
       )
       .then((res) => {
@@ -82,19 +74,6 @@ const RegisterForm = () => {
     return true;
   };
 
-  /*const validateUserName = (uname: string) => {
-    // FIX W DB
-    const regex = /^[a-zA-Z0-9_]+$/;
-    const len = uname.length;
-
-    if (!regex.test(uname)) return "Invalid Username";
-    if (len < 3) return "Username is not long enough.";
-    if (len >= 15) return "Username is too long.";
-    if (uname === "ASDFG") return "Username is taken.";
-
-    return true;
-  };*/
-
   const validatePassword = () => {
     if (pwState.first.length < 5) return false;
 
@@ -112,124 +91,108 @@ const RegisterForm = () => {
   }, []);
 
   return (
-    <ChakraProvider>
-      <Center h="100vh">
-        <Container
-          maxW="50ch"
-          paddingX="50px"
-          paddingY="20px"
-          borderRadius="15px"
-        >
-          {success ? (
-            <>
-              {/* ------------------------------   SUCCESS   ------------------------------ */}
+    <FormWrapper>
+      {success ? (
+        <>
+          {/* ------------------------------   SUCCESS   ------------------------------ */}
 
-              <Center>
-                <Text>Account created.</Text>
-              </Center>
-              <Button
-                marginY={marginBottom}
-                colorScheme={colorScheme}
-                w="100%"
-                variant="outline"
-                onClick={() => navigate("/login")}
-              >
-                Log In
-              </Button>
-            </>
-          ) : (
-            <>
-              {/* ------------------------------   FORM   ------------------------------ */}
-              <Center>
-                <Text>Create account.</Text>
-              </Center>
+          <Center>
+            <Text>Account created.</Text>
+          </Center>
+          <Button
+            marginY={marginBottom}
+            colorScheme={colorScheme}
+            w="100%"
+            variant="outline"
+            onClick={() => navigate("/login")}
+          >
+            Log In
+          </Button>
+        </>
+      ) : (
+        <>
+          {/* ------------------------------   FORM   ------------------------------ */}
+          <Center>
+            <Text>Create account.</Text>
+          </Center>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                {/* ------------------------------   EMAIL FIELD   ------------------------------ */}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* ------------------------------   EMAIL FIELD   ------------------------------ */}
 
-                <InputTextField
-                  err={errors}
-                  placeholder="E-mail"
-                  {...register("email", {
-                    required: "Please enter your email",
-                    validate: () => validateEmail(),
-                    onChange: (e) => setEmailState(e.target.value),
-                  })}
-                />
-
-                {emailState.length > 0 && !validateEmail() && (
-                  <ErrorText>Invalid E-mail.</ErrorText>
-                )}
-                {/* ------------------------------   USERNAME FIELD   ------------------------------ */}
-
-                {/*<InputTextField
+            <InputTextField
               err={errors}
-              placeholder="Username"
-              {...register("username", {
-                required: "Please enter your Username.",
-                validate: (value) => validateUserName(value),
+              placeholder="E-mail"
+              {...register("email", {
+                required: "Please enter your email",
+                validate: () => validateEmail(),
+                onChange: (e) => setEmailState(e.target.value),
               })}
-            />*/}
+            />
 
-                {/* ------------------------------   PASSWORD FIELD   ------------------------------ */}
+            {emailState.length > 0 && !validateEmail() && (
+              <ErrorText>Invalid E-mail.</ErrorText>
+            )}
 
-                <InputPasswordField
-                  err={errors}
-                  placeholder="Password"
-                  show={showPW}
-                  setShow={() => setShowPW(!showPW)}
-                  {...register("password", {
-                    required: "Please enter your password.",
-                    validate: () => validatePassword(),
-                    onChange: (e) =>
-                      setPwState({ ...pwState, first: e.target.value }),
-                  })}
-                />
+            {/* ------------------------------   PASSWORD FIELD   ------------------------------ */}
 
-                {pwState.first.length > 0 && !validatePassword() && (
-                  <ErrorText>Password is too weak.</ErrorText>
-                )}
+            <InputPasswordField
+              err={errors}
+              placeholder="Password"
+              show={showPW}
+              setShow={() => setShowPW(!showPW)}
+              {...register("password", {
+                required: "Please enter your password.",
+                validate: () => validatePassword(),
+                onChange: (e) =>
+                  setPwState({ ...pwState, first: e.target.value }),
+              })}
+            />
 
-                {/* ------------------------------   CONFIRM PASSWORD   ------------------------------ */}
+            {pwState.first.length > 0 && !validatePassword() && (
+              <ErrorText>Password is too weak.</ErrorText>
+            )}
 
-                <InputPasswordField
-                  err={errors}
-                  placeholder="Confirm Password"
-                  show={showVPW}
-                  setShow={() => setShowVPW(!showVPW)}
-                  {...register("confirmPassword", {
-                    required: "Please confirm your password.",
-                    validate: () => validateConfirm(),
-                    onChange: (e) =>
-                      setPwState({ ...pwState, second: e.target.value }),
-                  })}
-                />
+            {/* ------------------------------   CONFIRM PASSWORD   ------------------------------ */}
 
-                {pwState.first != pwState.second &&
-                  pwState.second.length > 0 && (
-                    <ErrorText>Passwords do not match.</ErrorText>
-                  )}
-                {/* ------------------------------   SUBMIT BUTTON   ------------------------------ */}
+            <InputPasswordField
+              err={errors}
+              placeholder="Confirm Password"
+              show={showVPW}
+              setShow={() => setShowVPW(!showVPW)}
+              {...register("confirmPassword", {
+                required: "Please confirm your password.",
+                validate: () => validateConfirm(),
+                onChange: (e) =>
+                  setPwState({ ...pwState, second: e.target.value }),
+              })}
+            />
 
-                <Button
-                  marginY={marginBottom}
-                  colorScheme={colorScheme}
-                  w="100%"
-                  type="submit"
-                  variant="outline"
-                  isDisabled={isSubmitting}
-                >
-                  {isSubmitting ? <Spinner color="red.500" /> : "Register"}
-                </Button>
-              </form>
-              <Flex justify="center">
-                <ErrorText>{errMsg}</ErrorText>
-              </Flex>
-            </>
-          )}
-        </Container>
-      </Center>
-    </ChakraProvider>
+            {pwState.first != pwState.second && pwState.second.length > 0 && (
+              <ErrorText>Passwords do not match.</ErrorText>
+            )}
+            {/* ------------------------------   SUBMIT BUTTON   ------------------------------ */}
+
+            <Button
+              marginY={marginBottom}
+              colorScheme={colorScheme}
+              w="100%"
+              type="submit"
+              variant="outline"
+              isDisabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Spinner color={colorPalette.primary} />
+              ) : (
+                "Register"
+              )}
+            </Button>
+          </form>
+          <Flex justify="center">
+            <ErrorText>{errMsg}</ErrorText>
+          </Flex>
+        </>
+      )}
+    </FormWrapper>
   );
 };
 

@@ -1,39 +1,45 @@
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import RecipeGrid from "./RecipeGrid";
-import { theme } from "../assets/StyleVariables";
 import { useEffect, useState } from "react";
+import useRecipes from "../hooks/useRecipes";
+import PageFlipper from "./PageFlipper";
+import { tmp } from "../services/tmp-data";
 
-function MainPage() {
+const MainPage = () => {
   const [requestURLobj, setRequestURLobj] = useState({
     filter: "",
     query: "",
-    page: "",
+    page: 0,
   });
+  const { recipes, error, isLoading } = useRecipes(requestURLobj);
+  const maxPages = Math.ceil(recipes.totalResults / recipes.number) - 1 || 3; ///////////////////
 
   useEffect(() => {
-    console.log("new page");
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [requestURLobj.page]);
 
   return (
-    <ChakraProvider theme={theme}>
-      <Box position="sticky" top="0" zIndex="999">
-        <NavBar
-          onClick={(data) => {
-            setRequestURLobj((prev) => ({ ...prev, ...data }));
-          }}
-        />
-      </Box>
+    <ChakraProvider>
+      <NavBar
+        onClick={(data) => {
+          setRequestURLobj((prev) => ({ ...prev, ...data }));
+        }}
+      />
 
       <RecipeGrid
-        requestURL={requestURLobj}
-        onClick={(data) => {
-          setRequestURLobj((prev) => ({ ...prev, page: data }));
-        }}
+        //recipes={recipes.results}
+        recipes={tmp.slice(requestURLobj.page * 3, requestURLobj.page * 3 + 3)}
+        error={error}
+        isLoading={isLoading}
+      />
+      <PageFlipper
+        maxPages={maxPages}
+        currentPage={requestURLobj.page}
+        onClick={(page) => setRequestURLobj({ ...requestURLobj, page: page })}
       />
     </ChakraProvider>
   );
-}
+};
 
 export default MainPage;

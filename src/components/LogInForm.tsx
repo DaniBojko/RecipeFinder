@@ -1,22 +1,14 @@
-import {
-  Button,
-  Center,
-  Container,
-  Text,
-  ChakraProvider,
-  HStack,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
+import { Button, Center, Text, HStack, Flex, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { marginBottom } from "../assets/StyleVariables";
+import { colorPalette, marginBottom } from "../assets/StyleVariables";
 import { useNavigate, useLocation } from "react-router-dom";
 import InputPasswordField from "./InputPasswordField";
 import InputTextField from "./InputTextField";
 import backEnd from "../services/back-end";
 import ErrorText from "./ErrorText";
 import useAuth from "../hooks/useAuth";
+import FormWrapper from "./Wrappers/FormWrapper";
 
 const LogInForm = () => {
   const {
@@ -36,10 +28,10 @@ const LogInForm = () => {
 
   const colorScheme = "orange";
 
-  const onSubmit = async (data: FieldValues) => {
+  const onSubmit = (data: FieldValues) => {
     setIsSubmitting(true);
     if (errMsg) setErrMsg("");
-    await backEnd
+    backEnd
       .post(
         "/login",
         { email: data.loginEmail, password: data.loginPassword },
@@ -56,6 +48,7 @@ const LogInForm = () => {
           password: data.loginPassword,
           accessToken: res.data.accessToken,
           refreshToken: res.data.refreshToken,
+          favouriteList: res.data.favourites,
         };
         console.log(a);
         setAuth({ ...a });
@@ -87,75 +80,66 @@ const LogInForm = () => {
   useEffect(() => setFocus("loginEmail"), []);
 
   return (
-    <ChakraProvider>
-      <Center h="100vh" padding="20px">
-        <Container
-          maxW="50ch"
-          paddingX="50px"
-          paddingY="20px"
-          borderRadius="15px"
-        >
-          <Center>
-            <Text>Log in to your account</Text>
-          </Center>
-
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* ------------------------------   EMAIL FIELD   ------------------------------ */}
-
-            <InputTextField
-              err={errors}
-              placeholder="E-mail"
-              {...register("loginEmail", {
-                required: "Please enter your E-mail.",
-              })}
-            />
-
-            {/* ------------------------------   PASSWORD FIELD   ------------------------------ */}
-
-            <InputPasswordField
-              err={errors}
-              placeholder="Password"
-              show={show}
-              setShow={() => setShow(!show)}
-              {...register("loginPassword", {
-                required: "Please enter your Password.",
-              })}
-            />
-
-            {/* ------------------------------   SUBMIT BUTTON   ------------------------------ */}
-
-            <Button
-              marginY={marginBottom}
-              colorScheme={colorScheme}
-              w="100%"
-              type="submit"
-              variant="outline"
-            >
-              {isSubmitting ? <Spinner color="red.500" /> : "Log in"}
-            </Button>
-
-            {/* ------------------------------   REGISTER BUTTON   ------------------------------ */}
-
-            <Flex justify="center">
-              <ErrorText>{errMsg}</ErrorText>
-            </Flex>
-
-            <Center>
-              <HStack>
-                <Text margin="0">Not a member yet?</Text>
-                <Button
-                  onClick={() => navigate("/register")}
-                  colorScheme={colorScheme}
-                  variant="link"
-                >
-                  Register
-                </Button>
-              </HStack>
-            </Center>
-          </form>
-        </Container>
+    <FormWrapper>
+      <Center>
+        <Text>Log in to your account</Text>
       </Center>
-    </ChakraProvider>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* ------------------------------   EMAIL FIELD   ------------------------------ */}
+
+        <InputTextField
+          err={errors}
+          placeholder="E-mail"
+          {...register("loginEmail", {
+            required: "Please enter your E-mail.",
+          })}
+        />
+
+        {/* ------------------------------   PASSWORD FIELD   ------------------------------ */}
+
+        <InputPasswordField
+          err={errors}
+          placeholder="Password"
+          show={show}
+          setShow={() => setShow(!show)}
+          {...register("loginPassword", {
+            required: "Please enter your Password.",
+          })}
+        />
+
+        {/* ------------------------------   SUBMIT BUTTON   ------------------------------ */}
+
+        <Button
+          marginY={marginBottom}
+          colorScheme={colorScheme}
+          w="100%"
+          type="submit"
+          variant="outline"
+        >
+          {isSubmitting ? <Spinner color={colorPalette.primary} /> : "Log in"}
+        </Button>
+
+        {/* ------------------------------   REGISTER BUTTON   ------------------------------ */}
+
+        <Flex justify="center">
+          <ErrorText>{errMsg}</ErrorText>
+        </Flex>
+
+        <Center>
+          <HStack>
+            <Text margin="0">Not a member yet?</Text>
+            <Button
+              onClick={() => navigate("/register")}
+              colorScheme={colorScheme}
+              variant="link"
+            >
+              Register
+            </Button>
+          </HStack>
+        </Center>
+      </form>
+    </FormWrapper>
   );
 };
 

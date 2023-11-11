@@ -4,10 +4,10 @@ import useAuth from "./useAuth";
 const useRefreshToken = () => {
   const { auth, setAuth } = useAuth();
 
-  const refresh = async () => {
+  const refresh = () => {
     let accessToken = "";
 
-    await backEnd
+    backEnd
       .post("/refresh", { refreshToken: auth.refreshToken })
       .then((res) => {
         accessToken = res.data.accessToken;

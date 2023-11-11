@@ -1,6 +1,5 @@
 import {
   Button,
-  Flex,
   IconButton,
   Menu,
   MenuButton,
@@ -14,6 +13,8 @@ import { colorPalette } from "../assets/StyleVariables";
 import SearchBar from "./SearchBar";
 import useAuth from "../hooks/useAuth";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import NavBarWrapper from "./Wrappers/NavBarWrapper";
+import uselogOut from "../hooks/useLogout";
 
 interface Props {
   onClick: (data: object) => void;
@@ -21,19 +22,17 @@ interface Props {
 
 const NavBar = ({ onClick }: Props) => {
   const navigate = useNavigate();
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
+  const logout = uselogOut();
   const hasAuthorized = Object.keys(auth).length !== 0;
 
   return (
-    <Flex
-      padding="20px"
-      alignItems="center"
-      backgroundColor="#fff"
-      borderBottom={`1px solid ${colorPalette.secondary}`}
-    >
+    <NavBarWrapper>
       <FilterDrawer onClick={(data) => onClick({ filter: data })} />
       <Spacer />
-      <SearchBar onClick={(data) => onClick({ query: data })} />
+
+      <SearchBar onSubmit={(data) => onClick({ query: data })} />
+
       <Spacer />
 
       {hasAuthorized ? (
@@ -55,8 +54,7 @@ const NavBar = ({ onClick }: Props) => {
             <MenuItem
               _focus={{ backgroundColor: colorPalette.secondaryLight }}
               onClick={() => {
-                setAuth({});
-                navigate("/");
+                logout();
               }}
             >
               Log out
@@ -72,7 +70,7 @@ const NavBar = ({ onClick }: Props) => {
           Log in
         </Button>
       )}
-    </Flex>
+    </NavBarWrapper>
   );
 };
 
