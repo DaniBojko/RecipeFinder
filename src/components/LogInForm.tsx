@@ -32,15 +32,7 @@ const LogInForm = () => {
     setIsSubmitting(true);
     if (errMsg) setErrMsg("");
     backEnd
-      .post(
-        "/login",
-        { email: data.loginEmail, password: data.loginPassword },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .post("/login", { email: data.loginEmail, password: data.loginPassword })
       .then((res) => {
         setIsSubmitting(false);
         const a = {

@@ -1,10 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import RecipeGrid from "./RecipeGrid";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useRecipes from "../hooks/useRecipes";
 import PageFlipper from "./PageFlipper";
 import { tmp } from "../services/tmp-data";
+import { requestLinkBuilder } from "../services/requestLinkBuilder";
 
 const MainPage = () => {
   const [requestURLobj, setRequestURLobj] = useState({
@@ -12,8 +13,11 @@ const MainPage = () => {
     query: "",
     page: 0,
   });
-  const { recipes, error, isLoading } = useRecipes(requestURLobj);
-  const maxPages = Math.ceil(recipes.totalResults / recipes.number) - 1 || 3; ///////////////////
+  const requestLink = requestLinkBuilder(requestURLobj) || "";
+  console.log(requestLink);
+  //const { recipes, error, isLoading } = useRecipes(requestLink);
+  //const maxPages = Math.ceil(recipes.totalResults / recipes.number) - 1 || 3; ///////////////////
+  const maxPages = Math.ceil(tmp.length / 3) - 1;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -30,8 +34,10 @@ const MainPage = () => {
       <RecipeGrid
         //recipes={recipes.results}
         recipes={tmp.slice(requestURLobj.page * 3, requestURLobj.page * 3 + 3)}
-        error={error}
-        isLoading={isLoading}
+        //error={error}
+        //isLoading={isLoading}
+        error=""
+        isLoading={false}
       />
       <PageFlipper
         maxPages={maxPages}

@@ -33,13 +33,7 @@ const RegisterForm = () => {
     setErrMsg("");
     setIsSubmitting(true);
     backEnd
-      .post(
-        "/register",
-        { email: data.email, password: data.password },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
+      .post("/register", { email: data.email, password: data.password })
       .then((res) => {
         setIsSubmitting(false);
         setSuccess(true);

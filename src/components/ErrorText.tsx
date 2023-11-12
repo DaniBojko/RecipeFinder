@@ -1,5 +1,4 @@
-import { PiWarningDuotone } from "react-icons/pi";
-import { Icon } from "@chakra-ui/icons";
+import { WarningIcon } from "@chakra-ui/icons";
 import { Center, HStack, Text } from "@chakra-ui/react";
 
 interface Props {
@@ -12,7 +11,7 @@ const ErrorText = ({ children }: Props) => {
   return (
     <HStack>
       <Center>
-        <Icon boxSize="15px" as={PiWarningDuotone} color={color} />
+        <WarningIcon boxSize="15px" color={color} />
       </Center>
 
       <Text fontSize="16px" marginBottom="2px" color={color}>

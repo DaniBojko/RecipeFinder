@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
-export interface UrlType {
-  filter: string;
-  query: string;
-  page: number;
-}
 
 export interface Recipe {
   id: number;
@@ -24,26 +19,19 @@ export interface ApiResponse {
   totalResults: number;
 }
 
-const MAX_RESULT_COUNT = 1;
+export const MAX_RESULT_COUNT = 1;
 const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired=true&ignorePantry=true&addRecipeInformation=true`;
 
-const useRecipes = (requestURL: UrlType) => {
+const useRecipes = (requestURL: string) => {
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+  const url = BASE_URL + requestURL;
   const [recipes, setRecipes] = useState<ApiResponse>({
     number: 0,
     offset: 0,
     results: [],
     totalResults: 0,
   });
-
-  const query = requestURL.query ? `&query=${requestURL.query}` : "";
-  const page =
-    requestURL.page !== 0
-      ? `&offset=${requestURL.page * MAX_RESULT_COUNT}`
-      : "";
-
-  const [error, setError] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const url = BASE_URL + requestURL.filter + query + page;
 
   useEffect(() => {
     setLoading(true);

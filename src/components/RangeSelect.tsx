@@ -39,8 +39,7 @@ const RangeSelect = ({
     return tmp * step;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     let min = rangeStart;
     let max = rangeEnd;
 
@@ -58,35 +57,40 @@ const RangeSelect = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <HStack>
-          <Input
-            border={`2px solid ${colorPalette.secondary}`}
-            _hover={{ borderColor: colorPalette.primary }}
-            _focusVisible={{
-              boxShadow: "0",
-              border: `2px solid ${colorPalette.primary}`,
-            }}
-            ref={minRef}
-            type="number"
-            defaultValue={value.rangeStart}
-          />
-          <Input
-            border={`2px solid ${colorPalette.secondary}`}
-            _hover={{ borderColor: colorPalette.primary }}
-            _focusVisible={{
-              boxShadow: "0",
-              border: `2px solid ${colorPalette.primary}`,
-            }}
-            ref={maxRef}
-            type="number"
-            defaultValue={value.rangeEnd}
-          />
-          <Button type="submit" width="100px" colorScheme="orange">
-            OK
-          </Button>
-        </HStack>
-      </form>
+      <HStack>
+        <Input
+          name="min"
+          border={`2px solid ${colorPalette.secondary}`}
+          _hover={{ borderColor: colorPalette.primary }}
+          _focusVisible={{
+            boxShadow: "0",
+            border: `2px solid ${colorPalette.primary}`,
+          }}
+          ref={minRef}
+          type="number"
+          defaultValue={value.rangeStart}
+        />
+        <Input
+          name="max"
+          border={`2px solid ${colorPalette.secondary}`}
+          _hover={{ borderColor: colorPalette.primary }}
+          _focusVisible={{
+            boxShadow: "0",
+            border: `2px solid ${colorPalette.primary}`,
+          }}
+          ref={maxRef}
+          type="number"
+          defaultValue={value.rangeEnd}
+        />
+        <Button
+          type="submit"
+          width="100px"
+          colorScheme="orange"
+          onClick={handleSubmit}
+        >
+          OK
+        </Button>
+      </HStack>
 
       <RangeSlider
         aria-label={["min", "max"]}

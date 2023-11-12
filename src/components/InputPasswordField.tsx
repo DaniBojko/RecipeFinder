@@ -1,4 +1,4 @@
-import { Icon, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { ErrorMessage } from "@hookform/error-message";
 import ErrorText from "./ErrorText";
@@ -7,9 +7,9 @@ import {
   inputVariant,
   colorPalette,
 } from "../assets/StyleVariables";
-import { LuEye, LuEyeOff } from "react-icons/lu";
 import { FieldErrors, ChangeHandler } from "react-hook-form";
 import React from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const borderColor = colorPalette.primary;
 
@@ -42,12 +42,15 @@ const InputPasswordField = (
           ref={ref}
         />
         <InputRightElement>
-          <Icon
-            color={borderColor}
-            cursor="pointer"
-            as={show ? LuEye : LuEyeOff}
-            onClick={setShow}
-          />
+          {show ? (
+            <ViewIcon color={borderColor} cursor="pointer" onClick={setShow} />
+          ) : (
+            <ViewOffIcon
+              color={borderColor}
+              cursor="pointer"
+              onClick={setShow}
+            />
+          )}
         </InputRightElement>
       </InputGroup>
 

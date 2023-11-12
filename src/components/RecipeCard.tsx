@@ -90,7 +90,11 @@ function RecipeCard(recipe: Recipe) {
             ></FavIcon>
           )}
 
-          <Image className="img" src={normalizeImage(image, imageType)} />
+          <Image
+            alt="image"
+            className="img"
+            src={normalizeImage(image, imageType)}
+          />
         </Box>
 
         <CardFooter paddingY="0" marginTop="1.25rem">

@@ -42,6 +42,7 @@ const SearchBar = ({ onSubmit, onChange = false }: Props) => {
             <SearchIcon />
           </InputLeftElement>
           <Input
+            name="search"
             ref={searchBarRef}
             variant="filled"
             type="text"

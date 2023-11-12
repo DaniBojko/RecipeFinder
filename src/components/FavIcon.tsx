@@ -1,7 +1,6 @@
 import { Flex, Icon } from "@chakra-ui/react";
 import { colorPalette } from "../assets/StyleVariables";
-import { PiHeartDuotone, PiHeartFill } from "react-icons/pi";
-
+import { GoHeart, GoHeartFill } from "react-icons/go";
 interface Props {
   isFavourite: boolean;
   onClick: (e: React.MouseEvent<SVGElement, MouseEvent>) => void;
@@ -17,7 +16,7 @@ const FavIcon = ({ isFavourite, onClick }: Props) => {
         opacity="1"
         zIndex={1}
         color={colorPalette.primary}
-        as={isFavourite ? PiHeartFill : PiHeartDuotone}
+        as={isFavourite ? GoHeartFill : GoHeart}
         onClick={onClick}
       />
     </Flex>

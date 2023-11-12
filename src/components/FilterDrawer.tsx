@@ -18,7 +18,6 @@ import {
   mealTypes,
 } from "../assets/StaticData";
 import { useRef, useState } from "react";
-import { requestLinkBuilder } from "../services/requestLinkBuilder";
 import {
   colorPalette,
   reactMultiSelectStyles,
@@ -26,6 +25,7 @@ import {
 } from "../assets/StyleVariables";
 import DrawerText from "./DrawerText";
 import RangeSelect from "./RangeSelect";
+import { filterBuilder } from "../services/filterBuilder";
 
 const marginBottom = "20px";
 
@@ -72,7 +72,7 @@ const FilterDrawer = ({ onClick }: Props) => {
   });
 
   const handleClick = () => {
-    onClick(requestLinkBuilder(filter));
+    onClick(filterBuilder(filter));
   };
 
   return (
