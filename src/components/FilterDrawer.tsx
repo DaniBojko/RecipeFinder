@@ -8,6 +8,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
 import Select from "react-select";
@@ -25,6 +26,7 @@ import {
 } from "../assets/StyleVariables";
 import DrawerText from "./DrawerText";
 import RangeSelect from "./RangeSelect";
+import { IoFilterSharp } from "react-icons/io5";
 import { filterBuilder } from "../services/filterBuilder";
 
 const marginBottom = "20px";
@@ -77,14 +79,13 @@ const FilterDrawer = ({ onClick }: Props) => {
 
   return (
     <>
-      <Button
+      <IconButton
         colorScheme="orange"
-        ref={btnRef}
-        variant="solid"
+        aria-label="Filter"
+        icon={<IoFilterSharp />}
         onClick={onOpen}
-      >
-        Filter
-      </Button>
+      />
+
       <Drawer
         isOpen={isOpen}
         placement="left"

@@ -12,6 +12,7 @@ export const colorPalette = {
   secondary: "#fec445",
   secondaryLight: "#ffefca",
   accent: "#007369",
+  backGround: "#f0f9f9",
 };
 
 export const reactSingleSelectStyles = {

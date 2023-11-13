@@ -3,7 +3,7 @@ import { colorPalette } from "../assets/StyleVariables";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 interface Props {
   isFavourite: boolean;
-  onClick: (e: React.MouseEvent<SVGElement, MouseEvent>) => void;
+  onClick: (e: React.MouseEvent) => void;
 }
 
 const FavIcon = ({ isFavourite, onClick }: Props) => {
@@ -14,7 +14,7 @@ const FavIcon = ({ isFavourite, onClick }: Props) => {
         cursor="pointer"
         boxSize="48px"
         opacity="1"
-        zIndex={1}
+        zIndex={10}
         color={colorPalette.primary}
         as={isFavourite ? GoHeartFill : GoHeart}
         onClick={onClick}

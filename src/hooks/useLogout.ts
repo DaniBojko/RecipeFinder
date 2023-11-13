@@ -1,16 +1,17 @@
-import backEnd from "../services/back-end";
+import useBackEndPrivate from "../hooks/useBackEndPrivate";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 
 const uselogOut = () => {
-  const { auth, setAuth } = useAuth();
+  const { setAuth } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
+  const backEndPrivate = useBackEndPrivate();
 
   const logout = () => {
-    backEnd
-      .post("/logout", { refreshToken: auth.refreshToken })
+    backEndPrivate
+      .get("/logout")
       .then(() => {
         setAuth({});
         navigate("/", { replace: true });

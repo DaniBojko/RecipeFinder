@@ -1,5 +1,4 @@
 import {
-  Button,
   IconButton,
   Menu,
   MenuButton,
@@ -15,6 +14,7 @@ import useAuth from "../hooks/useAuth";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import NavBarWrapper from "./Wrappers/NavBarWrapper";
 import uselogOut from "../hooks/useLogout";
+import { IoLogInSharp } from "react-icons/io5";
 
 interface Props {
   onClick: (data: object) => void;
@@ -62,13 +62,12 @@ const NavBar = ({ onClick }: Props) => {
           </MenuList>
         </Menu>
       ) : (
-        <Button
+        <IconButton
           colorScheme="orange"
-          variant="solid"
+          aria-label="Log in"
+          icon={<IoLogInSharp />}
           onClick={() => navigate("/login")}
-        >
-          Log in
-        </Button>
+        />
       )}
     </NavBarWrapper>
   );

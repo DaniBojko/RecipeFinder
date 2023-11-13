@@ -5,10 +5,8 @@ import { CanceledError } from "axios";
 export interface Recipe {
   id: number;
   image: string;
-  imageType: string;
   readyInMinutes: number;
   sourceUrl: string;
-  servings: number;
   title: string;
 }
 
@@ -19,7 +17,7 @@ export interface ApiResponse {
   totalResults: number;
 }
 
-export const MAX_RESULT_COUNT = 1;
+export const MAX_RESULT_COUNT = 20;
 const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired=true&ignorePantry=true&addRecipeInformation=true`;
 
 const useRecipes = (requestURL: string) => {
@@ -34,24 +32,29 @@ const useRecipes = (requestURL: string) => {
   });
 
   useEffect(() => {
-    setLoading(true);
     const controller = new AbortController();
+    let loadingTimeout = 0;
+    setLoading(true);
+
     apiClient
-      .get(url, {
-        signal: controller.signal,
-      })
+      .get(url, { signal: controller.signal })
       .then((res) => {
-        setRecipes(res.data);
-        console.log("Data fetched succesfully.\n", res.data);
-        setLoading(false);
+        loadingTimeout = setTimeout(() => {
+          setRecipes(res.data);
+          setLoading(false);
+        }, 500);
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
-        setError(err.message);
+        console.log(err);
         setLoading(false);
+        setError(err.message);
       });
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      clearTimeout(loadingTimeout);
+    };
   }, [requestURL]);
 
   return { recipes, error, isLoading };

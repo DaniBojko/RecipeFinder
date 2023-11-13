@@ -11,7 +11,7 @@ interface Props {
 }
 
 const RecipeGrid = ({ recipes, error, isLoading }: Props) => {
-  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8];
+  const skeletons = [1, 2, 3, 4, 5, 6];
   return (
     <GridWrapper>
       <Box>
@@ -19,9 +19,10 @@ const RecipeGrid = ({ recipes, error, isLoading }: Props) => {
         <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="1.5rem">
           {isLoading &&
             skeletons.map((skeleton) => <RecipeSkeleton key={skeleton} />)}
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} {...recipe}></RecipeCard>
-          ))}
+          {!isLoading &&
+            recipes.map((recipe) => (
+              <RecipeCard key={recipe.id} {...recipe}></RecipeCard>
+            ))}
         </SimpleGrid>
       </Box>
     </GridWrapper>

@@ -21,13 +21,14 @@ import FavIcon from "./FavIcon";
 import CardHeading from "./Wrappers/CardHeading";
 
 function RecipeCard(recipe: Recipe) {
-  const { id, image, imageType, readyInMinutes, sourceUrl, title } = recipe;
+  const { id, image, readyInMinutes, sourceUrl, title } = recipe;
   const { auth, setAuth } = useAuth();
   const isAuth = Object.keys(auth).length !== 0;
   const [isFavourite, setFavourite] = useState(
     isAuth && auth.favouriteList.includes(id)
   );
   const [hover, setHover] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const backEndPrivate = useBackEndPrivate();
   const toast = useToast();
@@ -39,40 +40,51 @@ function RecipeCard(recipe: Recipe) {
     }
   }, [isAuth]);
 
-  const sendFavourite = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const sendFavourite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    backEndPrivate
-      .post("/users", { favourite: id })
-      .then((res) => {
-        setFavourite(res.data.state);
-        setAuth({
-          ...auth,
-          favouriteList: res.data.favouriteList,
-        });
-      })
-      .catch((err) => {
-        if (!err?.response) {
-          toast({
-            title: "Unable to connect to server.",
-            description: "Please try again later.",
-            status: "error",
-            duration: 3000,
-            variant: "subtle",
+    if (!isAuth) {
+      navigate("/login");
+      return;
+    }
+    if (!isSubmitting) {
+      setFavourite((prev) => !prev);
+      setSubmitting(true);
+      backEndPrivate
+        .post("/users", {
+          favourite: { id, image, readyInMinutes, sourceUrl, title },
+        })
+        .then((res) => {
+          console.log("yess");
+          setSubmitting(false);
+          setAuth({
+            ...auth,
+            favouriteList: res.data.favouriteList,
           });
-          return;
-        } else if (err.response.status === 403) {
-          navigate("/login");
+        })
+        .catch((err) => {
           console.log(err);
-        } else {
-          toast({
-            title: "Server error.",
-            description: "Server could not handle the request.",
-            status: "error",
-            duration: 3000,
-            variant: "subtle",
-          });
-        }
-      });
+          setSubmitting(false);
+          setFavourite((prev) => !prev);
+          if (!err?.response) {
+            toast({
+              title: "Unable to connect to server.",
+              description: "Please try again later.",
+              status: "error",
+              duration: 3000,
+              variant: "subtle",
+            });
+            return;
+          } else {
+            toast({
+              title: "Server error.",
+              description: "Server could not handle the request.",
+              status: "error",
+              duration: 3000,
+              variant: "subtle",
+            });
+          }
+        });
+    }
   };
 
   return (
@@ -90,11 +102,7 @@ function RecipeCard(recipe: Recipe) {
             ></FavIcon>
           )}
 
-          <Image
-            alt="image"
-            className="img"
-            src={normalizeImage(image, imageType)}
-          />
+          <Image alt="image" className="img" src={normalizeImage(image)} />
         </Box>
 
         <CardFooter paddingY="0" marginTop="1.25rem">

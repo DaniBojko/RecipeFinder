@@ -42,16 +42,14 @@ const SearchBar = ({ onSubmit, onChange = false }: Props) => {
             <SearchIcon />
           </InputLeftElement>
           <Input
-            name="search"
             ref={searchBarRef}
-            variant="filled"
+            name="search"
             type="text"
             placeholder="Search recipes..."
+            boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
             value={query}
             _focusVisible={{
-              boxShadow: "0",
               border: `2px solid ${colorPalette.primary}`,
-              backgroundColor: "white",
             }}
             onChange={(query) => {
               setQuery(query.target.value);

@@ -9,6 +9,7 @@ const RecipeCardWrapper = ({ children, skeleton = false }: Props) => {
   return (
     <Card
       overflow="hidden"
+      zIndex={1}
       width={{ sm: "350px", xl: "275px" }}
       borderRadius="0"
       boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
