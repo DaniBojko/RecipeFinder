@@ -1,7 +1,6 @@
-import { ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./NavBar";
 import RecipeGrid from "./RecipeGrid";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import useRecipes from "../hooks/useRecipes";
 import PageFlipper from "./PageFlipper";
 import { tmp } from "../services/tmp-data";
@@ -25,37 +24,35 @@ const MainPage = () => {
   }, [requestURLobj.page]);
 
   return (
-    <ChakraProvider>
-      <BackGroundWrapper>
-        <>
-          <NavBar
-            onClick={(data) => {
-              setRequestURLobj((prev) => ({ ...prev, ...data }));
-            }}
-          />
-          <RecipeGrid
-            recipes={recipes.results}
-            error={error}
-            isLoading={isLoading}
-            /*recipes={tmp.slice(
+    <BackGroundWrapper>
+      <>
+        <NavBar
+          onClick={(data) => {
+            setRequestURLobj((prev) => ({ ...prev, ...data }));
+          }}
+        />
+        <RecipeGrid
+          recipes={recipes.results}
+          error={error}
+          isLoading={isLoading}
+          /*recipes={tmp.slice(
               requestURLobj.page * 3,
               requestURLobj.page * 3 + 3
             )}
             error=""
             isLoading={false}*/
+        />
+        {!isLoading && (
+          <PageFlipper
+            maxPages={maxPages}
+            currentPage={requestURLobj.page}
+            onClick={(page) =>
+              setRequestURLobj({ ...requestURLobj, page: page })
+            }
           />
-          {!isLoading && (
-            <PageFlipper
-              maxPages={maxPages}
-              currentPage={requestURLobj.page}
-              onClick={(page) =>
-                setRequestURLobj({ ...requestURLobj, page: page })
-              }
-            />
-          )}
-        </>
-      </BackGroundWrapper>
-    </ChakraProvider>
+        )}
+      </>
+    </BackGroundWrapper>
   );
 };
 

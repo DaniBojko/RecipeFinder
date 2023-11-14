@@ -17,7 +17,7 @@ import {
   ingredients,
   intolerances,
   mealTypes,
-} from "../assets/StaticData";
+} from "../assets/LocalData";
 import { useRef, useState } from "react";
 import {
   colorPalette,
@@ -44,7 +44,7 @@ export interface FilterObject {
   diets: ReactSelectData[];
   intolerances: ReactSelectData[];
   ingredients: ReactSelectData[];
-  mealType: ReactSelectData;
+  mealType: ReactSelectData | null;
   calorieRange: Range;
   carbRange: Range;
   proteinRange: Range;
@@ -66,7 +66,7 @@ const FilterDrawer = ({ onClick }: Props) => {
     diets: [],
     intolerances: [],
     ingredients: [],
-    mealType: { value: "", label: "" },
+    mealType: null,
     calorieRange: { rangeStart: calorieRange[0], rangeEnd: calorieRange[1] },
     carbRange: { rangeStart: carbRange[0], rangeEnd: carbRange[1] },
     proteinRange: { rangeStart: proteinRange[0], rangeEnd: proteinRange[1] },
@@ -99,6 +99,8 @@ const FilterDrawer = ({ onClick }: Props) => {
             Filter recipes
           </DrawerHeader>
           <DrawerBody backgroundColor="#fff">
+            {/*------------------------------- Ingredients ------------------------------------------*/}
+
             <Box marginTop="15px" marginBottom={marginBottom}>
               <DrawerText>Ingredients</DrawerText>
               <Select
@@ -114,6 +116,9 @@ const FilterDrawer = ({ onClick }: Props) => {
                 }}
               />
             </Box>
+
+            {/*----------------------------------- Diets --------------------------------------------*/}
+
             <Box marginBottom={marginBottom}>
               <DrawerText>Diets</DrawerText>
               <Select
@@ -129,6 +134,9 @@ const FilterDrawer = ({ onClick }: Props) => {
                 }}
               />
             </Box>
+
+            {/*------------------------------- Intolerances ------------------------------------------*/}
+
             <Box marginBottom={marginBottom}>
               <DrawerText>Intolerances</DrawerText>
               <Select
@@ -144,6 +152,8 @@ const FilterDrawer = ({ onClick }: Props) => {
                 }}
               />
             </Box>
+
+            {/*------------------------------- Meal type ------------------------------------------*/}
 
             <Box marginBottom={marginBottom}>
               <DrawerText>Meal type</DrawerText>
@@ -161,8 +171,10 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
 
+            {/*------------------------------- Calorie range ------------------------------------------*/}
+
             <Box marginBottom={marginBottom}>
-              <DrawerText>Calories</DrawerText>
+              <DrawerText>Calorie range</DrawerText>
               <RangeSelect
                 rangeStart={calorieRange[0]}
                 rangeEnd={calorieRange[1]}
@@ -177,8 +189,10 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
 
+            {/*------------------------------- Carb range ------------------------------------------*/}
+
             <Box marginBottom={marginBottom}>
-              <DrawerText>Carbs</DrawerText>
+              <DrawerText>Carb range</DrawerText>
               <RangeSelect
                 rangeStart={carbRange[0]}
                 rangeEnd={carbRange[1]}
@@ -192,8 +206,10 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
 
+            {/*------------------------------- Protein range ------------------------------------------*/}
+
             <Box marginBottom={marginBottom}>
-              <DrawerText>Protein</DrawerText>
+              <DrawerText>Protein range</DrawerText>
               <RangeSelect
                 rangeStart={proteinRange[0]}
                 rangeEnd={proteinRange[1]}
@@ -207,8 +223,10 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
 
+            {/*------------------------------- Fat range ------------------------------------------*/}
+
             <Box marginBottom={marginBottom}>
-              <DrawerText>Fat</DrawerText>
+              <DrawerText>Fat range</DrawerText>
               <RangeSelect
                 rangeStart={fatRange[0]}
                 rangeEnd={fatRange[1]}
@@ -222,6 +240,8 @@ const FilterDrawer = ({ onClick }: Props) => {
               />
             </Box>
           </DrawerBody>
+
+          {/*------------------------------- Submit button ------------------------------------------*/}
 
           <DrawerFooter
             backgroundColor="#fff"

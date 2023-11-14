@@ -42,6 +42,10 @@ export const reactSingleSelectStyles = {
       backgroundColor: colorPalette.secondaryLight,
     },
   }),
+  menuList: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
+    maxHeight: "13rem",
+  }),
 };
 
 export const reactMultiSelectStyles = {
@@ -68,6 +72,10 @@ export const reactMultiSelectStyles = {
     ":active": {
       backgroundColor: colorPalette.secondaryLight,
     },
+  }),
+  menuList: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
+    maxHeight: "13rem",
   }),
   multiValue: (baseStyles: CSSObjectWithLabel) => ({
     ...baseStyles,
