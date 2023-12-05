@@ -17,7 +17,7 @@ export interface ApiResponse {
   totalResults: number;
 }
 
-export const MAX_RESULT_COUNT = 20;
+export const MAX_RESULT_COUNT = 3;
 const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired=true&ignorePantry=true&addRecipeInformation=true`;
 
 const useRecipes = (requestURL: string) => {

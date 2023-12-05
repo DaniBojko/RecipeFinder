@@ -3,8 +3,8 @@ import { FilterObject } from "../components/FilterDrawer";
 export const filterBuilder = (filterData: FilterObject) => {
   let diets = filterData.diets.map((data) => data.value).join("|");
   let intolerances = filterData.intolerances.map((d) => d.value).join(",");
-  let ingredients = filterData.ingredients.map((d) => d.value).join(",+");
-  let mealType = filterData.mealType.value;
+  let ingredients = filterData.ingredients.map((d) => d.value).join(",");
+  let mealType = filterData.mealType?.value || "";
   let calorieRange = `&minCalories=${filterData.calorieRange.rangeStart}&maxCalories=${filterData.calorieRange.rangeEnd}`;
   let carbRange = `&minCarbs=${filterData.carbRange.rangeStart}&maxCarbs=${filterData.carbRange.rangeEnd}`;
   let proteinRange = `&minProtein=${filterData.proteinRange.rangeStart}&maxProtein=${filterData.proteinRange.rangeEnd}`;
@@ -17,14 +17,14 @@ export const filterBuilder = (filterData: FilterObject) => {
   if (mealType) mealType = `&type=${mealType}`;
 
   const retValue =
+    ingredients +
     diets +
     intolerances +
-    ingredients +
+    mealType +
     calorieRange +
     carbRange +
     proteinRange +
-    fatRange +
-    mealType;
+    fatRange;
 
   //console.log("RETVAL: " + retValue);
 

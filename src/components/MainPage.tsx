@@ -1,20 +1,25 @@
 import NavBar from "./NavBar";
 import RecipeGrid from "./RecipeGrid";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useRecipes from "../hooks/useRecipes";
 import PageFlipper from "./PageFlipper";
 import { tmp } from "../services/tmp-data";
 import { requestLinkBuilder } from "../services/requestLinkBuilder";
 import BackGroundWrapper from "./Wrappers/BackGroundWrapper";
+import useAuth from "../hooks/useAuth";
 
 const MainPage = () => {
-  const [requestURLobj, setRequestURLobj] = useState({
-    filter: "",
-    query: "",
-    page: 0,
-  });
+  const { searchParams } = useAuth();
+  const requestURLobj = {
+    filter: searchParams.get("filter"),
+    search: searchParams.get("search"),
+    page: parseInt(searchParams.get("page") || "0"),
+  };
+  //console.log(requestURLobj);
+
   const requestLink = requestLinkBuilder(requestURLobj) || "";
   const { recipes, error, isLoading } = useRecipes(requestLink);
+  console.log(recipes);
   const maxPages = Math.ceil(recipes.totalResults / recipes.number) - 1 || 0;
   //const maxPages = Math.ceil(tmp.length / 3) - 1;
   //const isLoading = false;
@@ -26,31 +31,19 @@ const MainPage = () => {
   return (
     <BackGroundWrapper>
       <>
-        <NavBar
-          onClick={(data) => {
-            setRequestURLobj((prev) => ({ ...prev, ...data }));
-          }}
-        />
+        <NavBar />
         <RecipeGrid
           recipes={recipes.results}
           error={error}
           isLoading={isLoading}
           /*recipes={tmp.slice(
-              requestURLobj.page * 3,
-              requestURLobj.page * 3 + 3
-            )}
-            error=""
-            isLoading={false}*/
+            requestURLobj.page * 3,
+            requestURLobj.page * 3 + 3
+          )}
+          error=""
+          isLoading={false}*/
         />
-        {!isLoading && (
-          <PageFlipper
-            maxPages={maxPages}
-            currentPage={requestURLobj.page}
-            onClick={(page) =>
-              setRequestURLobj({ ...requestURLobj, page: page })
-            }
-          />
-        )}
+        {!isLoading && <PageFlipper maxPages={maxPages} />}
       </>
     </BackGroundWrapper>
   );

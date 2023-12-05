@@ -12,6 +12,7 @@ const App = () => {
     <ChakraProvider>
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/:state" element={<MainPage />} />
         <Route path="/login" element={<LogInForm />} />
         <Route path="/register" element={<RegisterForm />} />
 

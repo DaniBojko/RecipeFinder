@@ -11,6 +11,7 @@ import useAuth from "../hooks/useAuth";
 import FormWrapper from "./Wrappers/FormWrapper";
 
 const LogInForm = () => {
+  const colorScheme = "orange";
   const {
     register,
     handleSubmit,
@@ -24,9 +25,10 @@ const LogInForm = () => {
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation().state?.from?.pathname || "/";
-
-  const colorScheme = "orange";
+  const location =
+    useLocation().state?.from?.pathname + useLocation().state?.from?.search ||
+    "/";
+  console.log(location);
 
   const onSubmit = (data: FieldValues) => {
     setIsSubmitting(true);

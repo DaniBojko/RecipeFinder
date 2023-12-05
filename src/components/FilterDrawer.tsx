@@ -11,7 +11,7 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import Select from "react-select";
+import Select, { MultiValue, SingleValue } from "react-select";
 import {
   diets,
   ingredients,
@@ -28,6 +28,7 @@ import DrawerText from "./DrawerText";
 import RangeSelect from "./RangeSelect";
 import { IoFilterSharp } from "react-icons/io5";
 import { filterBuilder } from "../services/filterBuilder";
+import useAuth from "../hooks/useAuth";
 
 const marginBottom = "20px";
 
@@ -41,40 +42,96 @@ export interface Range {
 }
 
 export interface FilterObject {
-  diets: ReactSelectData[];
-  intolerances: ReactSelectData[];
-  ingredients: ReactSelectData[];
-  mealType: ReactSelectData | null;
+  ingredients: MultiValue<ReactSelectData>;
+  diets: MultiValue<ReactSelectData>;
+  intolerances: MultiValue<ReactSelectData>;
+  mealType: SingleValue<ReactSelectData>;
   calorieRange: Range;
   carbRange: Range;
   proteinRange: Range;
   fatRange: Range;
 }
 
-interface Props {
-  onClick: (data: string) => void;
-}
-
-const FilterDrawer = ({ onClick }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = useRef(null);
+const FilterDrawer = () => {
   const calorieRange = [0, 1500];
   const carbRange = [0, 300];
   const proteinRange = [0, 100];
   const fatRange = [0, 100];
+  const btnRef = useRef(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { searchParams, setSearchParams } = useAuth();
+  const params = new URLSearchParams(searchParams.get("filter") || "");
+  const mealType = params.get("type");
   const [filter, updateFilter] = useState<FilterObject>({
-    diets: [],
-    intolerances: [],
-    ingredients: [],
-    mealType: null,
-    calorieRange: { rangeStart: calorieRange[0], rangeEnd: calorieRange[1] },
-    carbRange: { rangeStart: carbRange[0], rangeEnd: carbRange[1] },
-    proteinRange: { rangeStart: proteinRange[0], rangeEnd: proteinRange[1] },
-    fatRange: { rangeStart: fatRange[0], rangeEnd: fatRange[1] },
+    ingredients:
+      params
+        .get("includeIngredients")
+        ?.split(",")
+        .map((d) => ({
+          label: d.charAt(0).toUpperCase() + d.slice(1),
+          value: d,
+        })) || [],
+    diets:
+      params
+        .get("diet")
+        ?.split("|")
+        .map((d) => ({
+          label: d.charAt(0).toUpperCase() + d.slice(1),
+          value: d,
+        })) || [],
+    intolerances:
+      params
+        .get("intolerances")
+        ?.split(",")
+        .map((d) => ({
+          label: d.charAt(0).toUpperCase() + d.slice(1),
+          value: d,
+        })) || [],
+    mealType: mealType
+      ? {
+          value: mealType,
+          label: mealType.charAt(0).toUpperCase() + mealType.slice(1),
+        }
+      : null,
+    calorieRange: {
+      rangeStart: parseInt(
+        params.get("minCalories") || calorieRange[0].toString()
+      ),
+      rangeEnd: parseInt(
+        params.get("maxCalories") || calorieRange[1].toString()
+      ),
+    },
+    carbRange: {
+      rangeStart: parseInt(params.get("minCarbs") || carbRange[0].toString()),
+      rangeEnd: parseInt(params.get("maxCarbs") || carbRange[1].toString()),
+    },
+    proteinRange: {
+      rangeStart: parseInt(
+        params.get("minProtein") || proteinRange[0].toString()
+      ),
+      rangeEnd: parseInt(
+        params.get("maxProtein") || proteinRange[1].toString()
+      ),
+    },
+    fatRange: {
+      rangeStart: parseInt(params.get("minFat") || fatRange[0].toString()),
+      rangeEnd: parseInt(params.get("maxFat") || fatRange[1].toString()),
+    },
   });
 
+  /*const d = searchParams.get("filter");
+  let params = new URLSearchParams(d || "");
+  console.log(params.get("diet")?.split("|"));
+  console.log(params.get("mealType"));
+  console.log(params.get("includeIngredients"));*/
+
   const handleClick = () => {
-    onClick(filterBuilder(filter));
+    const url = filterBuilder(filter);
+    setSearchParams((prev) => {
+      prev.set("filter", url);
+      prev.set("page", "0");
+      return prev;
+    });
   };
 
   return (
@@ -111,7 +168,7 @@ const FilterDrawer = ({ onClick }: Props) => {
                 onChange={(data) => {
                   updateFilter({
                     ...filter,
-                    ingredients: data as ReactSelectData[],
+                    ingredients: data,
                   });
                 }}
               />
@@ -129,7 +186,7 @@ const FilterDrawer = ({ onClick }: Props) => {
                 onChange={(data) => {
                   updateFilter({
                     ...filter,
-                    diets: data as ReactSelectData[],
+                    diets: data,
                   });
                 }}
               />
@@ -147,7 +204,7 @@ const FilterDrawer = ({ onClick }: Props) => {
                 onChange={(data) => {
                   updateFilter({
                     ...filter,
-                    intolerances: data as ReactSelectData[],
+                    intolerances: data,
                   });
                 }}
               />
@@ -158,14 +215,15 @@ const FilterDrawer = ({ onClick }: Props) => {
             <Box marginBottom={marginBottom}>
               <DrawerText>Meal type</DrawerText>
               <Select
+                styles={reactSingleSelectStyles}
                 options={mealTypes}
                 defaultValue={filter.mealType}
                 isClearable
-                styles={reactSingleSelectStyles}
                 onChange={(data) => {
+                  console.log(data);
                   updateFilter({
                     ...filter,
-                    mealType: data as ReactSelectData,
+                    mealType: data,
                   });
                 }}
               />

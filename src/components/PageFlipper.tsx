@@ -1,14 +1,16 @@
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { HStack, IconButton, Spacer } from "@chakra-ui/react";
 import GridWrapper from "./Wrappers/GridWrapper";
+import useAuth from "../hooks/useAuth";
 
 interface Props {
   maxPages: number;
-  currentPage: number;
-  onClick: (page: number) => void;
 }
 
-const PageFlipper = ({ maxPages, currentPage, onClick }: Props) => {
+const PageFlipper = ({ maxPages }: Props) => {
+  const { searchParams, setSearchParams } = useAuth();
+  const currentPage = parseInt(searchParams.get("page") || "0");
+
   return (
     <GridWrapper>
       <HStack marginTop="2rem">
@@ -17,7 +19,10 @@ const PageFlipper = ({ maxPages, currentPage, onClick }: Props) => {
           colorScheme="orange"
           isDisabled={currentPage === 0}
           onClick={() => {
-            onClick(currentPage - 1);
+            setSearchParams((prev) => {
+              prev.set("page", `${currentPage - 1}`);
+              return prev;
+            });
           }}
           icon={<ArrowBackIcon />}
         ></IconButton>
@@ -27,7 +32,10 @@ const PageFlipper = ({ maxPages, currentPage, onClick }: Props) => {
           colorScheme="orange"
           isDisabled={currentPage === maxPages}
           onClick={() => {
-            onClick(currentPage + 1);
+            setSearchParams((prev) => {
+              prev.set("page", `${currentPage + 1}`);
+              return prev;
+            });
           }}
           icon={<ArrowForwardIcon />}
         ></IconButton>

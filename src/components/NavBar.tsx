@@ -6,33 +6,29 @@ import {
   MenuList,
   Spacer,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import FilterDrawer from "./FilterDrawer";
 import { colorPalette } from "../assets/StyleVariables";
-import SearchBar from "./SearchBar";
+import SearchBarSubmit from "./SearchBarSubmit";
 import useAuth from "../hooks/useAuth";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import NavBarWrapper from "./Wrappers/NavBarWrapper";
 import uselogOut from "../hooks/useLogout";
 import { IoLogInSharp } from "react-icons/io5";
 
-interface Props {
-  onClick: (data: object) => void;
-}
-
-const NavBar = ({ onClick }: Props) => {
+const NavBar = () => {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const logout = uselogOut();
+  const location = useLocation();
   const hasAuthorized = Object.keys(auth).length !== 0;
 
   return (
     <NavBarWrapper>
-      <FilterDrawer onClick={(data) => onClick({ filter: data })} />
+      <FilterDrawer />
       <Spacer />
 
-      <SearchBar onSubmit={(data) => onClick({ query: data })} />
-
+      <SearchBarSubmit />
       <Spacer />
 
       {hasAuthorized ? (
@@ -66,7 +62,9 @@ const NavBar = ({ onClick }: Props) => {
           colorScheme="orange"
           aria-label="Log in"
           icon={<IoLogInSharp />}
-          onClick={() => navigate("/login")}
+          onClick={() =>
+            navigate("/login", { state: { from: location }, replace: true })
+          }
         />
       )}
     </NavBarWrapper>

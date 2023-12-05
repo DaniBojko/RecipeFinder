@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import NavBarWrapper from "./Wrappers/NavBarWrapper";
 import { Button, Spacer } from "@chakra-ui/react";
-import SearchBar from "./SearchBar";
 import uselogOut from "../hooks/useLogout";
 import RecipeGrid from "./RecipeGrid";
 import BackGroundWrapper from "./Wrappers/BackGroundWrapper";
 import useFavourites from "../hooks/useFavourites";
 import { useState } from "react";
+import SearchBarChange from "./SearchBarChange";
 
 const FavouriteList = () => {
   const logout = uselogOut();
@@ -29,10 +29,11 @@ const FavouriteList = () => {
             Back
           </Button>
           <Spacer />
-          <SearchBar
-            onChange
-            onSubmit={(query) => setQuery(query.toLowerCase())}
-          ></SearchBar>
+
+          <SearchBarChange
+            onChange={(query) => setQuery(query.toLowerCase())}
+          ></SearchBarChange>
+
           <Spacer />
 
           <Button colorScheme="orange" onClick={() => logout()}>
