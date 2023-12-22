@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { SetURLSearchParams, useSearchParams } from "react-router-dom";
 
 interface Props {
@@ -13,30 +13,35 @@ type AuthType = {
   favouriteList: number[];
 };
 
-export type AuthContextType = {
+export type ContextType = {
   auth: AuthType;
   setAuth: React.Dispatch<React.SetStateAction<{}>>;
   searchParams: URLSearchParams;
   setSearchParams: SetURLSearchParams;
 };
 
-const AuthContext = createContext({});
+const Context = createContext({});
 
 export const AuthProvider = ({ children }: Props) => {
-  const [auth, setAuth] = useState({});
+  const [auth, setAuth] = useState(
+    JSON.parse(localStorage.getItem("auth") || "{}")
+  );
+
   const [searchParams, setSearchParams] = useSearchParams({
     filter: "",
     search: "",
     page: "",
   });
 
+  useEffect(() => {
+    localStorage.setItem("auth", JSON.stringify(auth));
+  }, [auth]);
+
   return (
-    <AuthContext.Provider
-      value={{ auth, setAuth, searchParams, setSearchParams }}
-    >
+    <Context.Provider value={{ auth, setAuth, searchParams, setSearchParams }}>
       {children}
-    </AuthContext.Provider>
+    </Context.Provider>
   );
 };
 
-export default AuthContext;
+export default Context;

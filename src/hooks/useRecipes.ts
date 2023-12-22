@@ -18,7 +18,7 @@ export interface ApiResponse {
 }
 
 export const MAX_RESULT_COUNT = 3;
-const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}&instructionsRequired=true&ignorePantry=true&addRecipeInformation=true`;
+const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}`;
 
 const useRecipes = (requestURL: string) => {
   const [error, setError] = useState("");
@@ -32,6 +32,7 @@ const useRecipes = (requestURL: string) => {
   });
 
   useEffect(() => {
+    console.log(url);
     const controller = new AbortController();
     let loadingTimeout = 0;
     setLoading(true);

@@ -10,23 +10,24 @@ import useAuth from "../hooks/useAuth";
 
 const MainPage = () => {
   const { searchParams } = useAuth();
-  const requestURLobj = {
-    filter: searchParams.get("filter"),
-    search: searchParams.get("search"),
+  const requestParams = {
+    search: searchParams.get("search") || "",
     page: parseInt(searchParams.get("page") || "0"),
+    filter: searchParams.get("filter") || "",
   };
-  //console.log(requestURLobj);
-
-  const requestLink = requestLinkBuilder(requestURLobj) || "";
+  const requestLink = requestLinkBuilder(requestParams) || "";
+  //console.log(requestLink);
   const { recipes, error, isLoading } = useRecipes(requestLink);
-  console.log(recipes);
   const maxPages = Math.ceil(recipes.totalResults / recipes.number) - 1 || 0;
+
+  /*FILTER PROBLEM FIX*/
+
   //const maxPages = Math.ceil(tmp.length / 3) - 1;
   //const isLoading = false;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }, [requestURLobj.page]);
+  }, [requestParams.page]);
 
   return (
     <BackGroundWrapper>
@@ -37,13 +38,15 @@ const MainPage = () => {
           error={error}
           isLoading={isLoading}
           /*recipes={tmp.slice(
-            requestURLobj.page * 3,
-            requestURLobj.page * 3 + 3
+            requestParams.page * 3,
+            requestParams.page * 3 + 3
           )}
           error=""
           isLoading={false}*/
         />
-        {!isLoading && <PageFlipper maxPages={maxPages} />}
+        {!isLoading && (
+          <PageFlipper currentPage={requestParams.page} maxPages={maxPages} />
+        )}
       </>
     </BackGroundWrapper>
   );

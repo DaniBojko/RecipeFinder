@@ -1,8 +1,8 @@
-import AuthContext, { AuthContextType } from "../services/auth-provider";
+import Context, { ContextType } from "../services/auth-provider";
 import { useContext } from "react";
 
-const useAuth = () => {
-  return useContext(AuthContext) as AuthContextType;
+const useGlobalState = () => {
+  return useContext(Context) as ContextType;
 };
 
-export default useAuth;
+export default useGlobalState;

@@ -119,12 +119,6 @@ const FilterDrawer = () => {
     },
   });
 
-  /*const d = searchParams.get("filter");
-  let params = new URLSearchParams(d || "");
-  console.log(params.get("diet")?.split("|"));
-  console.log(params.get("mealType"));
-  console.log(params.get("includeIngredients"));*/
-
   const handleClick = () => {
     const url = filterBuilder(filter);
     setSearchParams((prev) => {

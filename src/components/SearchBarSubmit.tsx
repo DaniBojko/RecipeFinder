@@ -11,7 +11,6 @@ const SearchBarSubmit = () => {
   const query = searchParams.get("search") || "";
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("asd");
     e.preventDefault();
     setSearchParams((prev) => {
       prev.set("search", searchBarRef.current?.value || "");

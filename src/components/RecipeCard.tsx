@@ -23,9 +23,9 @@ import CardHeading from "./Wrappers/CardHeading";
 function RecipeCard(recipe: Recipe) {
   const { id, image, readyInMinutes, sourceUrl, title } = recipe;
   const { auth, setAuth } = useAuth();
-  const isAuth = Object.keys(auth).length !== 0;
+  const hasAuthorized = Object.keys(auth).length !== 0;
   const [isFavourite, setFavourite] = useState(
-    isAuth && auth.favouriteList.includes(id)
+    hasAuthorized && auth.favouriteList.includes(id)
   );
   const [hover, setHover] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -34,15 +34,15 @@ function RecipeCard(recipe: Recipe) {
   const toast = useToast();
 
   useEffect(() => {
-    if (isFavourite && !isAuth) {
+    if (isFavourite && !hasAuthorized) {
       console.log("state set");
       setFavourite(false);
     }
-  }, [isAuth]);
+  }, [hasAuthorized]);
 
   const sendFavourite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isAuth) {
+    if (!hasAuthorized) {
       navigate("/login");
       return;
     }

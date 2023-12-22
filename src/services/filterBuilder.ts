@@ -13,7 +13,7 @@ export const filterBuilder = (filterData: FilterObject) => {
   if (diets) diets = `&diet=${diets}`;
   if (intolerances) intolerances = `&intolerances=${intolerances}`;
   if (ingredients)
-    ingredients = `&sort=min-missing-ingredients&includeIngredients=${ingredients}`;
+    ingredients = `&ignorePantry=true&sort=min-missing-ingredients&includeIngredients=${ingredients}`;
   if (mealType) mealType = `&type=${mealType}`;
 
   const retValue =

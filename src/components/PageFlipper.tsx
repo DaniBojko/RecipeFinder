@@ -4,12 +4,12 @@ import GridWrapper from "./Wrappers/GridWrapper";
 import useAuth from "../hooks/useAuth";
 
 interface Props {
+  currentPage: number;
   maxPages: number;
 }
 
-const PageFlipper = ({ maxPages }: Props) => {
-  const { searchParams, setSearchParams } = useAuth();
-  const currentPage = parseInt(searchParams.get("page") || "0");
+const PageFlipper = ({ currentPage, maxPages }: Props) => {
+  const { setSearchParams } = useAuth();
 
   return (
     <GridWrapper>
@@ -17,7 +17,7 @@ const PageFlipper = ({ maxPages }: Props) => {
         <IconButton
           aria-label="Previous page"
           colorScheme="orange"
-          isDisabled={currentPage === 0}
+          isDisabled={currentPage <= 0}
           onClick={() => {
             setSearchParams((prev) => {
               prev.set("page", `${currentPage - 1}`);
@@ -30,7 +30,7 @@ const PageFlipper = ({ maxPages }: Props) => {
         <IconButton
           aria-label="Next page"
           colorScheme="orange"
-          isDisabled={currentPage === maxPages}
+          isDisabled={currentPage >= maxPages}
           onClick={() => {
             setSearchParams((prev) => {
               prev.set("page", `${currentPage + 1}`);

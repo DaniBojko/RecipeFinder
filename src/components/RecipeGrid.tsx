@@ -17,12 +17,11 @@ const RecipeGrid = ({ recipes, error, isLoading }: Props) => {
       <Box>
         {error && <p>{error} </p>}
         <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="1.5rem">
-          {isLoading &&
-            skeletons.map((skeleton) => <RecipeSkeleton key={skeleton} />)}
-          {!isLoading &&
-            recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} {...recipe}></RecipeCard>
-            ))}
+          {isLoading
+            ? skeletons.map((skeleton) => <RecipeSkeleton key={skeleton} />)
+            : recipes.map((recipe) => (
+                <RecipeCard key={recipe.id} {...recipe}></RecipeCard>
+              ))}
         </SimpleGrid>
       </Box>
     </GridWrapper>
