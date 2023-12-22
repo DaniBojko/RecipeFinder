@@ -2,7 +2,7 @@ import RecipeGrid from "./RecipeGrid";
 import BackGroundWrapper from "./Wrappers/BackGroundWrapper";
 import useFavourites from "../hooks/useFavourites";
 import { useState } from "react";
-import NavBar from "./NavBar";
+import FavNav from "./FavNav";
 
 const FavouriteList = () => {
   const [query, setQuery] = useState("");
@@ -14,7 +14,7 @@ const FavouriteList = () => {
   return (
     <BackGroundWrapper>
       <>
-        <NavBar onChange={(q) => setQuery(q.toLowerCase())} />
+        <FavNav onChange={(q) => setQuery(q.toLowerCase())} />
         <RecipeGrid
           recipes={filteredRecipes}
           error={error}
