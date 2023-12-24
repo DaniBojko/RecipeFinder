@@ -1,44 +1,19 @@
 import { useEffect, useState } from "react";
-import apiClient from "../services/api-client";
-import { CanceledError } from "axios";
+import { AxiosInstance, CanceledError } from "axios";
 
-export interface Recipe {
-  id: number;
-  image: string;
-  readyInMinutes: number;
-  sourceUrl: string;
-  title: string;
-}
-
-export interface ApiResponse {
-  number: number;
-  offset: number;
-  results: Recipe[];
-  totalResults: number;
-}
-
-export const MAX_RESULT_COUNT = 3;
-const BASE_URL = `/complexSearch?number=${MAX_RESULT_COUNT}`;
-
-const useRecipes = (requestURL: string) => {
+const useRecipes = <T>(api: AxiosInstance, endPoint: string) => {
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const url = BASE_URL + requestURL;
-  const [recipes, setRecipes] = useState<ApiResponse>({
-    number: 0,
-    offset: 0,
-    results: [],
-    totalResults: 0,
-  });
+  const [recipes, setRecipes] = useState<T | undefined>(undefined);
 
   useEffect(() => {
-    console.log(url);
+    console.log(endPoint);
     const controller = new AbortController();
     let loadingTimeout = 0;
     setLoading(true);
 
-    apiClient
-      .get(url, { signal: controller.signal })
+    api
+      .get(endPoint, { signal: controller.signal })
       .then((res) => {
         loadingTimeout = setTimeout(() => {
           setRecipes(res.data);
@@ -56,7 +31,7 @@ const useRecipes = (requestURL: string) => {
       controller.abort();
       clearTimeout(loadingTimeout);
     };
-  }, [requestURL]);
+  }, [endPoint]);
 
   return { recipes, error, isLoading };
 };

@@ -7,6 +7,22 @@ import { tmp } from "../services/tmp-data";
 import { requestLinkBuilder } from "../services/requestLinkBuilder";
 import BackGroundWrapper from "./Wrappers/BackGroundWrapper";
 import useAuth from "../hooks/useAuth";
+import apiClient from "../services/api-client";
+
+export type Recipe = {
+  id: number;
+  image: string;
+  readyInMinutes: number;
+  sourceUrl: string;
+  title: string;
+};
+
+export type SpoonacularResponse = {
+  number: number;
+  offset: number;
+  results: Recipe[];
+  totalResults: number;
+};
 
 const MainPage = () => {
   const { searchParams } = useAuth();
@@ -17,8 +33,15 @@ const MainPage = () => {
   };
   const requestLink = requestLinkBuilder(requestParams) || "";
   //console.log(requestLink);
-  const { recipes, error, isLoading } = useRecipes(requestLink);
-  const maxPages = Math.ceil(recipes.totalResults / recipes.number) - 1 || 0;
+  const { recipes, error, isLoading } = useRecipes<SpoonacularResponse>(
+    apiClient,
+    requestLink
+  );
+  const maxPages =
+    recipes === undefined
+      ? 0
+      : Math.ceil(recipes.totalResults / recipes.number) - 1 || 0;
+  console.log(recipes);
 
   /*FILTER PROBLEM FIX*/
 
@@ -34,7 +57,7 @@ const MainPage = () => {
       <>
         <NavBar />
         <RecipeGrid
-          recipes={recipes.results}
+          recipes={recipes === undefined ? [] : recipes.results}
           error={error}
           isLoading={isLoading}
           /*recipes={tmp.slice(

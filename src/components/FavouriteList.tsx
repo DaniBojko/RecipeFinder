@@ -1,15 +1,23 @@
 import RecipeGrid from "./RecipeGrid";
 import BackGroundWrapper from "./Wrappers/BackGroundWrapper";
-import useFavourites from "../hooks/useFavourites";
 import { useState } from "react";
 import FavNav from "./FavNav";
+import useRecipes from "../hooks/useRecipes";
+import { Recipe } from "./MainPage";
+import { backEndPrivate } from "../services/back-end";
 
 const FavouriteList = () => {
   const [query, setQuery] = useState("");
-  const { recipes, error, isLoading } = useFavourites();
-  const filteredRecipes = recipes.filter(
-    (recipe) => recipe.title.toLowerCase().indexOf(query) !== -1
+  const { recipes, error, isLoading } = useRecipes<Recipe[]>(
+    backEndPrivate,
+    "/users"
   );
+  const filteredRecipes =
+    recipes === undefined
+      ? []
+      : recipes.filter(
+          (recipe) => recipe.title.toLowerCase().indexOf(query) !== -1
+        );
 
   return (
     <BackGroundWrapper>

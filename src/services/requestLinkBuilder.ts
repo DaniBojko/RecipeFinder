@@ -1,4 +1,4 @@
-import { MAX_RESULT_COUNT } from "../hooks/useRecipes";
+import { MAX_RESULT_COUNT } from "./api-client";
 
 export interface RequestObj {
   filter: string;
